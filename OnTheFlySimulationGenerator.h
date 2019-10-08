@@ -60,6 +60,7 @@ public:
   void EnableJetQA(Bool_t b = kTRUE)                      { fJetQA           = b             ; }
   void EnableJetTree(Bool_t b = kTRUE)                    { fJetTree         = b             ; }
   void EnableDMesonJets(Bool_t b = kTRUE)                 { fDMesonJets      = b             ; }
+  void EnableLcJets(Bool_t b = kTRUE)                     { fLcJets          = b             ; }
   void SetBeamType(EBeamType_t b)                         { fBeamType        = b             ; }
   void SetRejectISR(Bool_t b)                             { fRejectISR       = b             ; }
   void SetPartonEventGenerator(EGenerator_t gen)          { fPartonEvent     = gen           ; }
@@ -97,6 +98,7 @@ protected:
   void               AddJetQA(const char* file_name = "");
   void               AddJetTree(const char* file_name = "");
   void               AddDJet(const char* file_name = "");
+  void               AddLcJet(const char* file_name = "");
 
   void               CalculateCMSEnergy();
 
@@ -117,6 +119,7 @@ protected:
   Bool_t               fJetQA            ;
   Bool_t               fJetTree          ;
   Bool_t               fDMesonJets       ;
+  Bool_t               fLcJets           ;
   Float_t              fEnergyBeam1      ; // in GeV
   Float_t              fEnergyBeam2      ; // in GeV
   Bool_t               fRejectISR        ;

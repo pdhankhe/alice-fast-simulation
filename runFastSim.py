@@ -217,7 +217,7 @@ def Powheg(LHEfile, proc, powheg_stage, job_number, load_packages_separately):
             print("POWHEG generated {} events, stored in {}".format(powheg_result.events_generated, powheg_result.lhe_file))
 
     AddEmptyEvent(powheg_result.lhe_file)
-    
+
     return powheg_result
 
 def RunHerwig(nevents, pdfid, load_packages_separately):
@@ -340,7 +340,7 @@ def Herwig(HEPfile, nevents, pdfid, load_packages_separately):
             exit(1)
     else:
         herwig_result = RunHerwig(nevents, pdfid, load_packages_separately)
-    
+
     return herwig_result
 
 def main(events, powheg_stage, job_number, yamlConfigFile, batch_job, input_events, minpthard, maxpthard, debug_level):
@@ -360,7 +360,7 @@ def main(events, powheg_stage, job_number, yamlConfigFile, batch_job, input_even
         load_packages_separately = config["grid_config"]["load_packages_separately"]
     else:
         load_packages_separately = False
-    
+
     if batch_job != "grid":
         load_packages_separately = False
 
@@ -421,7 +421,7 @@ def main(events, powheg_stage, job_number, yamlConfigFile, batch_job, input_even
         if events > max_events:
             print("Reducing the number of requested events to match the event found in the LHE file (with a {}% buffer to avoid PYTHIA6 crash): {}".format(powheg_buffer * 100, max_events))
             events = max_events
-    
+
     if "herwig" in gen:
         herwig_result = Herwig(input_events, events, config["lhans"], load_packages_separately)
         HEPfile = herwig_result.hep_file

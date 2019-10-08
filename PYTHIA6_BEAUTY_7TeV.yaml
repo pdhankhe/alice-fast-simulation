@@ -1,6 +1,6 @@
 name: PYTHIA6_BEAUTY_7TeV
-numevents: 50000
-numbjobs: 400
+numevents: 1
+numbjobs: 1
 gen: pythia6
 proc: beauty
 lhans: 11000

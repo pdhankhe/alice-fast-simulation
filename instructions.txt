@@ -1,0 +1,8 @@
+/cvmfs/alice.cern.ch/bin/alienv enter VO_ALICE@AliPhysics::vAN-20181026-1
+/cvmfs/alice.cern.ch/bin/alienv enter VO_ALICE@POWHEG::r3178-alice1-1
+tar -zxvf powheg.tar.gz
+cd alice-fast-simulation
+python submit_grid.py POWHEG_PYTHIA6_EVTGEN_BEAUTY_13TeV_central.yaml --offline
+go in the created directory
+python runFastSim.py POWHEG_PYTHIA6_EVTGEN_BEAUTY_13TeV_central.yaml --numevents 1 --minpthard -1 --maxpthard -1 --batch-job grid --job-number 78965412 --powheg-stage 0
+

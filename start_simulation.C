@@ -53,6 +53,14 @@ void start_simulation(TString name, Int_t pythiaEvents, TString procStr, TString
   gSystem->Load("libPWGEMCALtasks");
   gSystem->Load("libPWGJEEMCALJetTasks");
 
+  /*
+  #if !defined (__CINT__) || defined (__CLING__)
+      gInterpreter->LoadMacro("AliAnalysisTaskHFJets.cxx++g");
+  #else
+      gROOT->LoadMacro("AliAnalysisTaskHFJets.cxx++g");
+  #endif
+  */
+
   gSystem->Load("AnalysisCode.so");
 
   TString command = TString::Format(".x runJetSimulation.C+g(\"%s\", %d, \"%s\", \"%s\", %d, \"%s\", \"%s\", \"%s\", %f, %f, %d, %d, %f, %f, %d)",
