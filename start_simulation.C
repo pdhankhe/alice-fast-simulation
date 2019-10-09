@@ -48,18 +48,78 @@ void start_simulation(TString name, Int_t pythiaEvents, TString procStr, TString
     gSystem->Load("libTEvtGen");
   }
 
-  gSystem->Load("libSTEER");
+  // Load common libraries (better too many than too few)
+  gSystem->Load("libTree");
+  gSystem->Load("libVMC");
+  gSystem->Load("libCore");
+  gSystem->Load("libGeom");
+  gSystem->Load("libGui");
+  gSystem->Load("libXMLParser");
+  gSystem->Load("libMinuit");
+  gSystem->Load("libMinuit2");
+  gSystem->Load("libProof");
+  gSystem->Load("libPhysics");
+  gSystem->Load("libANALYSIS");
+  gSystem->Load("libANALYSISalice");
   gSystem->Load("libAOD");
-  gSystem->Load("libPWGEMCALtasks");
-  gSystem->Load("libPWGJEEMCALJetTasks");
+  gSystem->Load("libESD");
+  gSystem->Load("libOADB");
+  gSystem->Load("libSTEERBase");
+  gSystem->Load("libCDB");
+  gSystem->Load("libRAWDatabase");
+  gSystem->Load("libSTEER");
+  gSystem->Load("libEVGEN");
+  gSystem->Load("libpythia6");
+  gSystem->Load("libAliPythia6");
+  gSystem->Load("libCORRFW");
+  gSystem->Load("libTOFbase");
+  //gSystem->Load("libTOFrec");
+  gSystem->Load("libRAWDatabase");
+  gSystem->Load("libRAWDatarec");
+  gSystem->Load("libTPCbase");
+  gSystem->Load("libTPCrec");
+  gSystem->Load("libITSbase");
+  gSystem->Load("libITSrec");
+  gSystem->Load("libTRDbase");
+  gSystem->Load("libTender");
+  gSystem->Load("libSTAT");
+  gSystem->Load("libTRDrec");
+  gSystem->Load("libHMPIDbase");
+  gSystem->Load("libPWGPP");
+  gSystem->Load("libPWGHFbase");
+  gSystem->Load("libPWGDQdielectron");
+  gSystem->Load("libPWGHFhfe");
+  gSystem->Load("libEMCALUtils");
+  gSystem->Load("libPHOSUtils");
+  gSystem->Load("libPWGCaloTrackCorrBase");
+  gSystem->Load("libEMCALraw");
+  gSystem->Load("libEMCALbase");
+  gSystem->Load("libEMCALrec");
+  gSystem->Load("libTRDbase");
+  gSystem->Load("libVZERObase");
+  gSystem->Load("libVZEROrec");
+  gSystem->Load("libTender");
+  gSystem->Load("libTenderSupplies");
+  gSystem->Load("libPWGTools");
+  gSystem->Load("libESDfilter");
+  gSystem->Load("libPWGGAEMCALTasks");
+  gSystem->Load("libPWGCFCorrelationsBase");
+  gSystem->Load("libPWGCFCorrelationsDPhi");
 
-  /*
-  #if !defined (__CINT__) || defined (__CLING__)
-      gInterpreter->LoadMacro("AliAnalysisTaskHFJets.cxx++g");
-  #else
-      gROOT->LoadMacro("AliAnalysisTaskHFJets.cxx++g");
-  #endif
-  */
+//  gSystem->Load("libJETAN");
+//  gSystem->Load("libPWGJE");
+//  gSystem->Load("libFASTJETAN");
+//  gSystem->Load("libPWGJEEMCALJetTasks");
+
+//  gSystem->Load("libSTEER");
+//  gSystem->Load("libAOD");
+  gSystem->Load("libPWGJEEMCALJetTasks");
+  gSystem->Load("libPWGEMCALbase");
+  gSystem->Load("libPWGEMCALtasks");
+  gSystem->Load("libPWGEMCALtrigger");
+  gSystem->Load("libPWGJETFW");
+  gSystem->Load("libPWGHFvertexingHF");
+  gSystem->Load("libPWGJEFlavourJetTasks");
 
   gSystem->Load("AnalysisCode.so");
 
