@@ -105,6 +105,7 @@ void start_simulation(TString name, Int_t pythiaEvents, TString procStr, TString
   gSystem->Load("libPWGGAEMCALTasks");
   gSystem->Load("libPWGCFCorrelationsBase");
   gSystem->Load("libPWGCFCorrelationsDPhi");
+  gSystem->Load("libPWGHFtreeHF");
 
 //  gSystem->Load("libJETAN");
 //  gSystem->Load("libPWGJE");

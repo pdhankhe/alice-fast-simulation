@@ -11,6 +11,7 @@
 #include <TChain.h>
 #include <TFile.h>
 #include <TMath.h>
+#include <TGrid.h>
 
 // AliRoot classes
 #include <AliESDInputHandler.h>
@@ -27,7 +28,7 @@
 //#include "AliPhysicsSelectionTask.h"
 //#include "AliMultSelectionTask.h"
 //#include "AliAnalysisTaskPIDResponse.h"
-//#include "AliAnalysisTaskSEHFTreeCreator.h"
+#include "AliAnalysisTaskSEHFTreeCreator.h"
 
 #include <AliEmcalJetTask.h>
 #include <AliAnalysisTaskEmcalJetTree.h>
@@ -37,6 +38,8 @@
 #include "AliPythia6_dev.h"
 #include "AliPythia8_dev.h"
 #include "AliGenReaderHepMC_dev.h"
+
+#include "/cvmfs/alice.cern.ch/el6-x86_64/Packages/AliPhysics/vAN-20191008-1/PWGHF/treeHF/macros/AddTaskHFTreeCreator.C"
 
 #include "OnTheFlySimulationGenerator.h"
 
@@ -315,24 +318,25 @@ void OnTheFlySimulationGenerator::AddLcJet(const char* file_name)
     old_file_name = AliAnalysisManager::GetCommonFileName();
     AliAnalysisManager::SetCommonFileName(fname);
   }
+  TGrid::Connect("alien://");
+  Bool_t isRunOnMC = kTRUE;
+  TString cutFile = "alien://///alice/cern.ch/user/l/lvermunt/cuts_tree_creator/03-10-2019/pp/D0DsDplusDstarLcBplusBsLbCuts_pp.root";          // file containing the cuts for the different mesons
 
-  Bool_t isRunOnMC = kTRUE; // set to kTRUE to run on Mone Carlo and uncomment/comment accordingly the following lines about paths on Alien
-  TString cutFile = "alien://///alice/cern.ch/user/b/bvolkel/cuts_tree_creator/09-09-2019/pp/D0DsDplusDstarLcBplusBsLbCuts_pp.root";          // file containing the cuts for the different mesons
-
-//    gROOT->LoadMacro("$ALICE_PHYSICS/OADB/macros/AddTaskPhysicsSelection.C");
-//    AliPhysicsSelectionTask *physSelTask = AddTaskPhysicsSelection(isRunOnMC);
 /*
+    gROOT->LoadMacro("$ALICE_PHYSICS/OADB/macros/AddTaskPhysicsSelection.C");
+    AliPhysicsSelectionTask *physSelTask = AddTaskPhysicsSelection(isRunOnMC);
+
     gROOT->LoadMacro("$ALICE_ROOT/ANALYSIS/macros/AddTaskPIDResponse.C");
     AliAnalysisTaskPIDResponse *pidResp = AddTaskPIDResponse(isRunOnMC);
 
     gROOT->LoadMacro("$ALICE_PHYSICS/OADB/COMMON/MULTIPLICITY/macros/AddTaskMultSelection.C");
     AliMultSelectionTask *multSel = AddTaskMultSelection();
     //multSel->SetAlternateOADBforEstimators("LHC15o-DefaultMC-HIJING");
+*/
 
     gROOT->LoadMacro("$ALICE_PHYSICS/PWGHF/treeHF/macros/AddTaskHFTreeCreator.C");
-    AliAnalysisTaskSEHFTreeCreator *task = AddTaskHFTreeCreator(kTRUE, 0, "TreeCreatorHF_pp_kINT7HighMult_Production_MC", cutFile.Data(), 1, kTRUE, kTRUE, 1, 1, 0, 0, 1, 1, 0, 0, 0, AliHFTreeHandler::kNsigmaPID, AliHFTreeHandler::kNsigmaPID, AliHFTreeHandler::kNsigmaPID, AliHFTreeHandler::kNsigmaPID, AliHFTreeHandler::kNsigmaPID, AliHFTreeHandler::kNsigmaPID, AliHFTreeHandler::kNsigmaPID, AliHFTreeHandler::kNsigmaPID, AliHFTreeHandler::kNsigmaPID, AliHFTreeHandler::kRedSingleTrackVars, kFALSE, kFALSE, 0, kFALSE);
-    task->SetFillJets(kFALSE);
-*/
+    AliAnalysisTaskSEHFTreeCreator *task = AddTaskHFTreeCreator(kTRUE, 0, "TreeCreatorHF_pp_kINT7HighMult_Production_MC", cutFile.Data(), 1, kTRUE, kTRUE, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+    task->SetFillJets(kTRUE);
 
   if (!fname.IsNull()) {
     AliAnalysisManager::SetCommonFileName(old_file_name);
