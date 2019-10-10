@@ -448,9 +448,13 @@ def main(events, powheg_stage, job_number, yamlConfigFile, batch_job, input_even
             shell.communicate()
     else:
         print("Compiling analysis code...")
+        print("Extracting archive...")
         subprocess.call(["tar", "-xf", "HepMC.tar"])
-        subprocess.call(["cmake", "."])
+        print("Calling cmake from dir %s ..." % os.getcwd())
+        subprocess.call(["cmake", os.getcwd()])
+        print("Calling make...")
         subprocess.call(["make"])
+        print("Everything compiled!")
 
         if batch_job == "lbnl3":
             work_dir = "output/{}".format(fname)
