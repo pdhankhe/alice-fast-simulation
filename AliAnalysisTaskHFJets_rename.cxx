@@ -840,7 +840,7 @@ Bool_t AliAnalysisTaskHFJets::OutputHandler::FillOutput(Bool_t applyKinCuts)
       hname = TString::Format("%s/fHistRejectedDMesonEta", fName.Data());
       fHistManager->FillTH1(hname, dmeson_pair.second.fD.Eta());
       if (fMCMode != kMCTruth) {
-        if (fCandidateType == kD0toKpi || fCandidateType == kD0toKpiLikeSign || fCandidateType == kLctopK0s) {
+        if (fCandidateType == kD0toKpi || fCandidateType == kD0toKpiLikeSign) {
           hname = TString::Format("%s/fHistRejectedDMesonInvMass", fName.Data());
           fHistManager->FillTH1(hname, dmeson_pair.second.fD.M());
         }
@@ -943,7 +943,7 @@ void AliAnalysisTaskHFJets::OutputHandlerTHnSparse::BuildOutputObject(const char
       dim++;
     }
 
-    if (fCandidateType == kD0toKpi || fCandidateType == kD0toKpiLikeSign || fCandidateType == kLctopK0s) {
+    if (fCandidateType == kD0toKpi || fCandidateType == kD0toKpiLikeSign) {
       title[dim] = "#it{M}_{K#pi} (GeV/#it{c}^{2})";
       nbins[dim] = fNMassBins;
       min[dim] = fMinMass;
@@ -1179,7 +1179,6 @@ void AliAnalysisTaskHFJets::OutputHandlerTTree::BuildOutputObject(const char* ta
   }
   else {
     switch (fCandidateType) {
-    case kLctopK0s:
     case kD0toKpi:
     case kD0toKpiLikeSign:
       if (fD0Extended) {
@@ -1303,7 +1302,7 @@ Bool_t AliAnalysisTaskHFJets::OutputHandlerTTree::FillOutput(Bool_t applyKinCuts
       hname = TString::Format("%s/fHistRejectedDMesonEta", fName.Data());
       fHistManager->FillTH1(hname, dmeson_pair.second.fD.Eta());
       if (fMCMode != kMCTruth) {
-        if (fCandidateType == kD0toKpi || fCandidateType == kD0toKpiLikeSign || fCandidateType == kLctopK0s) {
+        if (fCandidateType == kD0toKpi || fCandidateType == kD0toKpiLikeSign) {
           hname = TString::Format("%s/fHistRejectedDMesonInvMass", fName.Data());
           fHistManager->FillTH1(hname, dmeson_pair.second.fD.M());
         }
@@ -1393,7 +1392,6 @@ AliAnalysisTaskHFJets::OutputHandlerTTreeExtendedBase* AliAnalysisTaskHFJets::Ou
   }
   else {
     switch (eng->GetCandidateType()) {
-    case kLctopK0s:
     case kD0toKpi:
     case kD0toKpiLikeSign:
       if (eng->IsD0Extended()) {
@@ -1577,7 +1575,7 @@ Bool_t AliAnalysisTaskHFJets::OutputHandlerTTreeExtended<EVENTTYPE, DMESONTYPE, 
       hname = TString::Format("%s/fHistRejectedDMesonEta", fName.Data());
       fHistManager->FillTH1(hname, dmeson_pair.second.fD.Eta());
       if (fMCMode != kMCTruth) {
-        if (fCandidateType == kD0toKpi || fCandidateType == kD0toKpiLikeSign || fCandidateType == kLctopK0s) {
+        if (fCandidateType == kD0toKpi || fCandidateType == kD0toKpiLikeSign) {
           hname = TString::Format("%s/fHistRejectedDMesonInvMass", fName.Data());
           fHistManager->FillTH1(hname, dmeson_pair.second.fD.M());
         }
@@ -1960,17 +1958,6 @@ void AliAnalysisTaskHFJets::AnalysisEngine::Init(const AliEMCALGeometry* const /
 void AliAnalysisTaskHFJets::AnalysisEngine::SetCandidateProperties(Double_t range)
 {
   switch (fCandidateType) {
-  case kLctopK0s:
-    fCandidatePDG = 4122;
-    fCandidateName = "Lc";
-    fNDaughters = 2;
-    fPDGdaughters.Set(fNDaughters);
-    fPDGdaughters.Reset();
-    fPDGdaughters[0] = 2212;  // p
-    fPDGdaughters[1] = 310;  // K0S
-    fBranchName = "LctopK0s";
-    fAcceptedDecay = kDecayLctopK0s;
-    break;
   case kD0toKpi:
     fCandidatePDG = 421;
     fCandidateName = "D0";
@@ -2221,7 +2208,7 @@ bool operator==(const AliAnalysisTaskHFJets::AnalysisEngine& lhs, const AliAnaly
 /// \return kTRUE on success
 Bool_t AliAnalysisTaskHFJets::AnalysisEngine::ExtractRecoDecayAttributes(const AliAODRecoDecayHF2Prong* Dcand, AliDmesonJetInfo& DmesonJet, UInt_t i)
 {
-  if (fCandidateType == kD0toKpi || fCandidateType == kD0toKpiLikeSign || fCandidateType == kLctopK0s) { // D0 candidate
+  if (fCandidateType == kD0toKpi || fCandidateType == kD0toKpiLikeSign) { // D0 candidate
     return ExtractD0Attributes(Dcand, DmesonJet, i);
   }
   else if (fCandidateType == kDstartoKpipi) { // Dstar candidate
@@ -2445,13 +2432,6 @@ AliAnalysisTaskHFJets::EMesonDecayChannel_t AliAnalysisTaskHFJets::AnalysisEngin
         if (D0decay == kDecayD0toKpi) {
           decay = kDecayDStartoKpipi;
         }
-      }
-    }
-
-    if (absPdgPart == 4122) { // Lc -> p K0S
-      if ((absPdg1 == 2212 && absPdg2 == 310) || // p K0S
-          (absPdg1 == 310 && absPdg2 == 2212)) { // K0S p
-        decay = kDecayLctopK0s;
       }
     }
   }
@@ -3088,7 +3068,6 @@ AliAnalysisTaskHFJets::AnalysisEngine* AliAnalysisTaskHFJets::AddAnalysisEngine(
     TString cutsname;
 
     switch (type) {
-    case kLctopK0s:
     case kD0toKpi:
     case kD0toKpiLikeSign:
       cutsname = "D0toKpiCuts";
@@ -3251,7 +3230,7 @@ void AliAnalysisTaskHFJets::UserCreateOutputObjects()
     fHistManager.CreateTH1(hname, htitle, 200, 0, TMath::TwoPi());
 
     if (param.fMCMode != kMCTruth) {
-      if (param.fCandidateType == kD0toKpi || param.fCandidateType == kD0toKpiLikeSign || param.fCandidateType == kLctopK0s) {
+      if (param.fCandidateType == kD0toKpi || param.fCandidateType == kD0toKpiLikeSign) {
         hname = TString::Format("%s/fHistRejectedDMesonInvMass", param.GetName());
         htitle = hname + ";#it{M}_{K#pi} (GeV/#it{c}^{2});counts";
         fHistManager.CreateTH1(hname, htitle, param.fNMassBins, param.fMinMass, param.fMaxMass);
@@ -3511,7 +3490,7 @@ void AliAnalysisTaskHFJets::ExecOnce()
 
       if (params.fCandidateArray) {
         TString className;
-        if (params.fCandidateType == kD0toKpi || params.fCandidateType == kD0toKpiLikeSign || params.fCandidateType == kLctopK0s) {
+        if (params.fCandidateType == kD0toKpi || params.fCandidateType == kD0toKpiLikeSign) {
           className = "AliAODRecoDecayHF2Prong";
         }
         else if (params.fCandidateType == kDstartoKpipi) {

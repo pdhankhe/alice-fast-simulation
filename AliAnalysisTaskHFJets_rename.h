@@ -84,7 +84,7 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
   typedef AliJetContainer::ERecoScheme_t ERecoScheme_t;
 
   enum EOutputType_t { kNoOutput, kTreeOutput, kTHnOutput, kOnlyQAOutput, kTreeExtendedOutput };
-  enum ECandidateType_t  { kD0toKpi, kDstartoKpipi, kD0toKpiLikeSign, kLctopK0s };
+  enum ECandidateType_t  { kD0toKpi, kDstartoKpipi, kD0toKpiLikeSign };
   enum EMCMode_t { kNoMC, kSignalOnly, kBackgroundOnly, kMCTruth, kD0Reflection, kOnlyWrongPIDAccepted };
   enum EMesonOrigin_t {
     kUnknownQuark = BIT(0),
@@ -102,8 +102,7 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
     kAnyDecay            = 0,
     kUnknownDecay        = BIT(0),
     kDecayD0toKpi        = BIT(1),
-    kDecayDStartoKpipi   = BIT(2),
-    kDecayLctopK0s       = BIT(3)
+    kDecayDStartoKpipi   = BIT(2)
   };
 
   enum EAxis_t {
