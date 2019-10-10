@@ -302,7 +302,7 @@ def SubmitProcessingJobs(TrainName, LocalPath, AlienPath, AliPhysicsVersion, Off
     FilesToCopy = [yamlFileName, "OnTheFlySimulationGenerator.cxx", "OnTheFlySimulationGenerator.h",
                    "runJetSimulation.C", "start_simulation.C",
                    "lhapdf_utils.py",
-                   "Makefile", "HepMC.tar",
+                   "CMakeLists.txt", "AnalysisCodeLinkDef.h", "HepMC.tar",
                    "AliGenExtFile_dev.h", "AliGenExtFile_dev.cxx",
                    "AliGenReaderHepMC_dev.h", "AliGenReaderHepMC_dev.cxx",
                    "AliGenEvtGen_dev.h", "AliGenEvtGen_dev.cxx",

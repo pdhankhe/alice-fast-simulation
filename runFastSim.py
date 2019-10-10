@@ -448,12 +448,14 @@ def main(events, powheg_stage, job_number, yamlConfigFile, batch_job, input_even
             shell.communicate()
     else:
         print("Compiling analysis code...")
+        subprocess.call(["tar", "-xf", "HepMC.tar"])
+        subprocess.call(["cmake", "."])
         subprocess.call(["make"])
 
         if batch_job == "lbnl3":
             work_dir = "output/{}".format(fname)
             os.makedirs(work_dir)
-            shutil.copy("AnalysisCode.so", work_dir)
+            shutil.copy("libAnalysisCode.so", work_dir)
             if os.path.isfile("AnalysisCode.rootmap"): shutil.copy("AnalysisCode.rootmap", work_dir)
             shutil.copy("runJetSimulation.C", work_dir)
             shutil.copy("start_simulation.C", work_dir)
