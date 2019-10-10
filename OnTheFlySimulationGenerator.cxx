@@ -6,12 +6,10 @@
 
 // Root classes
 #include <TSystem.h>
-#include <TInterpreter.h>
 #include <TArrayI.h>
 #include <TChain.h>
 #include <TFile.h>
 #include <TMath.h>
-#include <TGrid.h>
 
 // AliRoot classes
 #include <AliESDInputHandler.h>
@@ -25,11 +23,6 @@
 
 // AliPhysics classes
 #include <AliAnalysisTaskDmesonJets.h>
-//#include "AliPhysicsSelectionTask.h"
-//#include "AliMultSelectionTask.h"
-//#include "AliAnalysisTaskPIDResponse.h"
-#include "AliAnalysisTaskSEHFTreeCreator.h"
-
 #include <AliEmcalJetTask.h>
 #include <AliAnalysisTaskEmcalJetTree.h>
 #include <AliAnalysisTaskEmcalJetQA.h>
@@ -39,8 +32,7 @@
 #include "AliPythia8_dev.h"
 #include "AliGenReaderHepMC_dev.h"
 
-#include "/cvmfs/alice.cern.ch/el6-x86_64/Packages/AliPhysics/vAN-20191008-1/PWGHF/treeHF/macros/AddTaskHFTreeCreator.C"
-
+#include "AliAnalysisTaskHFJets.h"
 #include "OnTheFlySimulationGenerator.h"
 
 //______________________________________________________________________________
@@ -73,9 +65,9 @@ OnTheFlySimulationGenerator::OnTheFlySimulationGenerator() :
   fDebugClassNames({"AliGenPythia_dev", "AliPythia6_dev", "AliPythia8_dev",
   "AliGenEvtGen_dev", "AliGenExtFile_dev", "AliGenReaderHepMC_dev", "THepMCParser_dev",
   "AliMCGenHandler",
-  "AliAnalysisTaskEmcalJetQA", "AliAnalysisTaskDmesonJets", "AliEmcalJetTask",
+  "AliAnalysisTaskEmcalJetQA", "AliAnalysisTaskDmesonJets", "AliAnalysisTaskHFJets", "AliEmcalJetTask",
   "AliAnalysisTaskEmcalJetTree<AliEmcalJetInfoSummaryPP, AliEmcalJetEventInfoSummaryPP>",
-  "AliAnalysisTaskDmesonJets::AnalysisEngine"})
+  "AliAnalysisTaskDmesonJets::AnalysisEngine", "AliAnalysisTaskHFJets::AnalysisEngine"})
 {
 }
 
@@ -109,9 +101,9 @@ OnTheFlySimulationGenerator::OnTheFlySimulationGenerator(TString taskname) :
   fDebugClassNames({"AliGenPythia_dev", "AliPythia6_dev", "AliPythia8_dev",
   "AliGenEvtGen_dev", "AliGenExtFile_dev", "AliGenReaderHepMC_dev", "THepMCParser_dev",
   "AliMCGenHandler",
-  "AliAnalysisTaskEmcalJetQA", "AliAnalysisTaskDmesonJets", "AliEmcalJetTask",
+  "AliAnalysisTaskEmcalJetQA", "AliAnalysisTaskDmesonJets", "AliAnalysisTaskHFJets", "AliEmcalJetTask",
   "AliAnalysisTaskEmcalJetTree<AliEmcalJetInfoSummaryPP, AliEmcalJetEventInfoSummaryPP>",
-  "AliAnalysisTaskDmesonJets::AnalysisEngine"})
+  "AliAnalysisTaskDmesonJets::AnalysisEngine", "AliAnalysisTaskHFJets::AnalysisEngine"})
 {
 }
 
@@ -142,7 +134,7 @@ OnTheFlySimulationGenerator::OnTheFlySimulationGenerator(TString taskname, Int_t
   fHadronization(kPythia6),
   fDecayer(kPythia6),
   fExtendedEventInfo(kFALSE),
-  fDebugClassNames({"AliGenPythia_dev", "AliPythia6_dev", "AliPythia8_dev", "AliGenEvtGen_dev", "AliGenPythia", "AliPythia", "AliPythia8", "AliGenEvtGen", "AliMCGenHandler", "AliEmcalMCTrackSelector", "AliAnalysisTaskEmcalJetQA", "AliAnalysisTaskDmesonJets", "AliEmcalJetTask", "AliAnalysisTaskEmcalJetTree<AliEmcalJetInfoSummaryPP, AliEmcalJetEventInfoSummaryPP>"})
+  fDebugClassNames({"AliGenPythia_dev", "AliPythia6_dev", "AliPythia8_dev", "AliGenEvtGen_dev", "AliGenPythia", "AliPythia", "AliPythia8", "AliGenEvtGen", "AliMCGenHandler", "AliEmcalMCTrackSelector", "AliAnalysisTaskEmcalJetQA", "AliAnalysisTaskDmesonJets", "AliAnalysisTaskHFJets", "AliEmcalJetTask", "AliAnalysisTaskEmcalJetTree<AliEmcalJetInfoSummaryPP, AliEmcalJetEventInfoSummaryPP>"})
 {
 }
 
@@ -190,8 +182,8 @@ void OnTheFlySimulationGenerator::PrepareAnalysisManager()
 
   AliEmcalMCTrackSelector* pMCTrackSel = AliEmcalMCTrackSelector::AddTaskMCTrackSelector("mcparticles",kFALSE,kFALSE,-1,kFALSE);
 
-//  if (fJetQA) AddJetQA();
-//  if (fDMesonJets) AddDJet();
+  if (fJetQA) AddJetQA();
+  if (fDMesonJets) AddDJet();
   if (fLcJets) AddLcJet();
   if (fJetTree) {
     if (fDMesonJets || fLcJets) {
@@ -318,25 +310,30 @@ void OnTheFlySimulationGenerator::AddLcJet(const char* file_name)
     old_file_name = AliAnalysisManager::GetCommonFileName();
     AliAnalysisManager::SetCommonFileName(fname);
   }
-  TGrid::Connect("alien://");
-  Bool_t isRunOnMC = kTRUE;
-  TString cutFile = "alien://///alice/cern.ch/user/l/lvermunt/cuts_tree_creator/03-10-2019/pp/D0DsDplusDstarLcBplusBsLbCuts_pp.root";          // file containing the cuts for the different mesons
 
-/*
-    gROOT->LoadMacro("$ALICE_PHYSICS/OADB/macros/AddTaskPhysicsSelection.C");
-    AliPhysicsSelectionTask *physSelTask = AddTaskPhysicsSelection(isRunOnMC);
+  UInt_t rejectOrigin = 0;
 
-    gROOT->LoadMacro("$ALICE_ROOT/ANALYSIS/macros/AddTaskPIDResponse.C");
-    AliAnalysisTaskPIDResponse *pidResp = AddTaskPIDResponse(isRunOnMC);
-
-    gROOT->LoadMacro("$ALICE_PHYSICS/OADB/COMMON/MULTIPLICITY/macros/AddTaskMultSelection.C");
-    AliMultSelectionTask *multSel = AddTaskMultSelection();
-    //multSel->SetAlternateOADBforEstimators("LHC15o-DefaultMC-HIJING");
-*/
-
-    gROOT->LoadMacro("$ALICE_PHYSICS/PWGHF/treeHF/macros/AddTaskHFTreeCreator.C");
-    AliAnalysisTaskSEHFTreeCreator *task = AddTaskHFTreeCreator(kTRUE, 0, "TreeCreatorHF_pp_kINT7HighMult_Production_MC", cutFile.Data(), 1, kTRUE, kTRUE, 1, 1, 1, 1, 1, 1, 1, 1, 1);
-    task->SetFillJets(kTRUE);
+  AliAnalysisTaskHFJets* pHFJetsTask = AliAnalysisTaskHFJets::AddTaskHFJets("", "", "usedefault", 2);
+  pHFJetsTask->SetVzRange(-999,999);
+  pHFJetsTask->SetPtHardRange(fMinPtHard, fMaxPtHard);
+  if (fMinPtHard > -1 && fMaxPtHard > fMinPtHard) pHFJetsTask->SetMCFilter();
+  pHFJetsTask->SetJetPtFactor(4);
+  pHFJetsTask->SetIsPythia(kTRUE);
+  pHFJetsTask->SetNeedEmcalGeom(kFALSE);
+  pHFJetsTask->SetForceBeamType(AliAnalysisTaskEmcalLight::kpp);
+  pHFJetsTask->SetCentralityEstimation(AliAnalysisTaskEmcalLight::kNoCentrality);
+  if (fExtendedEventInfo) {
+    pHFJetsTask->SetOutputType(AliAnalysisTaskHFJets::kTreeExtendedOutput);
+  }
+  else {
+    pHFJetsTask->SetOutputType(AliAnalysisTaskHFJets::kTreeOutput);
+  }
+  pHFJetsTask->SetApplyKinematicCuts(kTRUE);
+  pHFJetsTask->SetRejectISR(fRejectISR);
+  AliAnalysisTaskHFJets::AnalysisEngine* eng = 0;
+  eng = pHFJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kD0toKpi, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kChargedJet, 0.4);
+  eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
+  eng->SetRejectedOriginMap(rejectOrigin);
 
   if (!fname.IsNull()) {
     AliAnalysisManager::SetCommonFileName(old_file_name);

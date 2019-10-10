@@ -120,5 +120,5 @@ void testload()
   gSystem->Load("libPWGJEFlavourJetTasks");
 
   std::cout << "Loading the main library" << std::endl;
-  gSystem->Load("AnalysisCode.so");
+  gSystem->Load("libAnalysisCode.so");
 }

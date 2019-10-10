@@ -105,7 +105,6 @@ void start_simulation(TString name, Int_t pythiaEvents, TString procStr, TString
   gSystem->Load("libPWGGAEMCALTasks");
   gSystem->Load("libPWGCFCorrelationsBase");
   gSystem->Load("libPWGCFCorrelationsDPhi");
-  gSystem->Load("libPWGHFtreeHF");
 
 //  gSystem->Load("libJETAN");
 //  gSystem->Load("libPWGJE");
@@ -122,9 +121,9 @@ void start_simulation(TString name, Int_t pythiaEvents, TString procStr, TString
   gSystem->Load("libPWGHFvertexingHF");
   gSystem->Load("libPWGJEFlavourJetTasks");
 
-  gSystem->Load("AnalysisCode.so");
+  gSystem->Load("libAnalysisCode.so");
 
-  TString command = TString::Format(".x runJetSimulation.C++g(\"%s\", %d, \"%s\", \"%s\", %d, \"%s\", \"%s\", \"%s\", %f, %f, %d, %d, %f, %f, %d)",
+  TString command = TString::Format(".x runJetSimulation.C+g(\"%s\", %d, \"%s\", \"%s\", %d, \"%s\", \"%s\", \"%s\", %f, %f, %d, %d, %f, %f, %d)",
       name.Data(), pythiaEvents, procStr.Data(), gen.Data(), seed, lhe.Data(), hep.Data(),
       beamType.Data(), ebeam1, ebeam2, always_d_mesons, extended_event_info, minPtHard, maxPtHard, debug_level);
 
