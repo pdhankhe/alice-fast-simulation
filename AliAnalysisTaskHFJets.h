@@ -308,7 +308,7 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
   /// information in a very compact data structure (32 bits)
   class AliDmesonInfoSummary {
   public:
-    AliDmesonInfoSummary() : fPt(0), fEta(0), fPhi(0) {;}
+    AliDmesonInfoSummary() : fPt(0), fEta(0), fPhi(0), fY(0) {;}
     AliDmesonInfoSummary(const AliDmesonJetInfo& source);
     virtual ~AliDmesonInfoSummary() {}
 
@@ -321,6 +321,8 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
     Double32_t   fEta    ; //[-2.048,2.048,10]
     /// Phi of the D meson
     Double32_t   fPhi    ; //[0,2*pi,10]
+    /// Y of the D meson
+    Double32_t   fY    ;
 
     /// \cond CLASSIMP
     ClassDef(AliDmesonInfoSummary, 2);

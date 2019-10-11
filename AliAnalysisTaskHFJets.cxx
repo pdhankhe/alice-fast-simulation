@@ -484,7 +484,8 @@ ClassImp(AliAnalysisTaskHFJets::AliDmesonInfoSummary);
 AliAnalysisTaskHFJets::AliDmesonInfoSummary::AliDmesonInfoSummary(const AliDmesonJetInfo& source) :
   fPt(0),
   fEta(0),
-  fPhi(0)
+  fPhi(0),
+  fY(0)
 {
   Set(source);
 }
@@ -497,6 +498,7 @@ void AliAnalysisTaskHFJets::AliDmesonInfoSummary::Set(const AliDmesonJetInfo& so
   fPt = source.fD.Pt();
   fEta = source.fD.Eta();
   fPhi = source.fD.Phi_0_2pi();
+  fY = source.fD.Rapidity();
 }
 
 /// Reset the object
@@ -505,6 +507,7 @@ void AliAnalysisTaskHFJets::AliDmesonInfoSummary::Reset()
   fPt = 0;
   fEta = 0;
   fPhi = 0;
+  fY = 0;
 }
 
 // Definitions of class AliAnalysisTaskHFJets::AliDmesonMCInfoSummary
