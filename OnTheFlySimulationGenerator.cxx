@@ -180,11 +180,12 @@ void OnTheFlySimulationGenerator::PrepareAnalysisManager()
   mcInputHandler->SetSeedMode(1);
   fAnalysisManager->SetMCtruthEventHandler(mcInputHandler);
 
-//  AliEmcalMCTrackSelector* pMCTrackSel = AliEmcalMCTrackSelector::AddTaskMCTrackSelector("mcparticles",kFALSE,kFALSE,-1,kFALSE);
+  AliEmcalMCTrackSelector* pMCTrackSel = AliEmcalMCTrackSelector::AddTaskMCTrackSelector("mcparticles",kFALSE,kFALSE,-1,kFALSE);
 
 //  if (fJetQA) AddJetQA();
 //  if (fDMesonJets) AddDJet();
   if (fLcJets) AddLcJet();
+
   /*
   if (fJetTree) {
     if (fDMesonJets || fLcJets) {
