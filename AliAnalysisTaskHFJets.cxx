@@ -3069,7 +3069,7 @@ AliRDHFCuts* AliAnalysisTaskHFJets::LoadDMesonCutsFromFile(TString cutfname, TSt
 /// \return Pointer to the AnalysisEngine added to the list.
 AliAnalysisTaskHFJets::AnalysisEngine* AliAnalysisTaskHFJets::AddAnalysisEngine(ECandidateType_t type, TString cutfname, TString cuttype, EMCMode_t MCmode, EJetType_t jettype, Double_t jetradius, TString rhoName)
 {
-  AliHFJetDefinition jetDef(jettype, jetradius, AliJetContainer::antikt_algorithm, AliJetContainer::pt_scheme, rhoName);
+  AliHFJetDefinition jetDef(jettype, jetradius, AliJetContainer::antikt_algorithm, AliJetContainer::E_scheme, rhoName);
   return AddAnalysisEngine(type, cutfname, cuttype, MCmode, jetDef, rhoName);
 }
 

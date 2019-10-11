@@ -336,7 +336,6 @@ void OnTheFlySimulationGenerator::AddLcJet(const char* file_name)
   eng = pHFJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kLctopK0s, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kChargedJet, 0.4);
   eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
   eng->SetRejectedOriginMap(rejectOrigin);
-  eng->AddJetDefinition(AliJetContainer::kChargedJet, 0.4, AliJetContainer::antikt_algorithm, AliJetContainer::E_scheme);
 
   if (!fname.IsNull()) {
     AliAnalysisManager::SetCommonFileName(old_file_name);
