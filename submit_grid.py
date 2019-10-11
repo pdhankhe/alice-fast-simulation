@@ -302,7 +302,8 @@ def SubmitProcessingJobs(TrainName, LocalPath, AlienPath, AliPhysicsVersion, Off
     FilesToCopy = [yamlFileName, "OnTheFlySimulationGenerator.cxx", "OnTheFlySimulationGenerator.h",
                    "runJetSimulation.C", "start_simulation.C",
                    "lhapdf_utils.py",
-                   "CMakeLists.txt", "AnalysisCodeLinkDef.h", "HepMC.tar",
+#                   "CMakeLists.txt", "AnalysisCodeLinkDef.h",
+                   "HepMC.tar",
                    "AliGenExtFile_dev.h", "AliGenExtFile_dev.cxx",
                    "AliGenReaderHepMC_dev.h", "AliGenReaderHepMC_dev.cxx",
                    "AliGenEvtGen_dev.h", "AliGenEvtGen_dev.cxx",
@@ -311,7 +312,8 @@ def SubmitProcessingJobs(TrainName, LocalPath, AlienPath, AliPhysicsVersion, Off
                    "AliPythia8_dev.h", "AliPythia8_dev.cxx",
                    "AliPythiaBase_dev.h", "AliPythiaBase_dev.cxx",
                    "AliAnalysisTaskHFJets.h", "AliAnalysisTaskHFJets.cxx",
-                   "THepMCParser_dev.h", "THepMCParser_dev.cxx"]
+                   "THepMCParser_dev.h", "THepMCParser_dev.cxx",
+                   "libAnalysisCode.so"]
 
     Packages = "\"VO_ALICE@Python-modules::1.0-12\",\n"
     Packages += "\"VO_ALICE@CMake::v2.8.12-2\",\n"
