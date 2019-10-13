@@ -1,8 +1,19 @@
-/cvmfs/alice.cern.ch/bin/alienv enter VO_ALICE@AliPhysics::vAN-20181026-1
-/cvmfs/alice.cern.ch/bin/alienv enter VO_ALICE@POWHEG::r3178-alice1-1
-tar -zxvf powheg.tar.gz
+Clone the repository from https://github.com/vkucera/alice-fast-simulation.
+
+How to submit jobs on the Grid from lxplus:
+
+/cvmfs/alice.cern.ch/bin/alienv enter VO_ALICE@AliPhysics::vAN-20181026-1,VO_ALICE@POWHEG::r3178-alice1-1,VO_ALICE@Python-modules::1.0-12
+alient-token-init
 cd alice-fast-simulation
-python submit_grid.py POWHEG_PYTHIA6_EVTGEN_BEAUTY_13TeV_central.yaml --offline
-go in the created directory
-python runFastSim.py POWHEG_PYTHIA6_EVTGEN_BEAUTY_13TeV_central.yaml --numevents 1 --minpthard -1 --maxpthard -1 --batch-job grid --job-number 78965412 --powheg-stage 0
+git checkout taskHFjets
+./test-library.sh
+Edit the config file POWHEG_PYTHIA6_EVTGEN_BEAUTY_13TeV_central.yaml.
+./submit_grid.py POWHEG_PYTHIA6_EVTGEN_BEAUTY_13TeV_central.yaml
+
+How to run a job locally:
+
+./submit_grid.py POWHEG_PYTHIA6_EVTGEN_BEAUTY_13TeV_central.yaml --offline
+cp libAnalysisCode.so <working directory>
+cd <working directory>
+./runFastSim.py POWHEG_PYTHIA6_EVTGEN_BEAUTY_13TeV_central.yaml --numevents 1 --minpthard -1 --maxpthard -1 --batch-job grid --powheg-stage 0
 
