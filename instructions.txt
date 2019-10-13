@@ -3,7 +3,7 @@ Clone the repository from https://github.com/vkucera/alice-fast-simulation.
 How to submit jobs on the Grid from lxplus:
 
 /cvmfs/alice.cern.ch/bin/alienv enter VO_ALICE@AliPhysics::vAN-20181026-1,VO_ALICE@POWHEG::r3178-alice1-1,VO_ALICE@Python-modules::1.0-12
-alient-token-init
+alien-token-init
 cd alice-fast-simulation
 git checkout taskHFjets
 ./test-library.sh
