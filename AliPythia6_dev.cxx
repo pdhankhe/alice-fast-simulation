@@ -107,7 +107,7 @@ void AliPythia6_dev::Pytune(int itune)
   pytune(itune);
 }
 
-void AliPythia6_dev::ProcInit(Process_t process, Float_t energy, Int_t strucfunc, Int_t itune)
+void AliPythia6_dev::ProcInit(ProcessMy_t process, Float_t energy, Int_t strucfunc, Int_t itune)
 {
   // Initialise the process to generate
   if (!AliPythiaRndm::GetPythiaRandom()) AliPythiaRndm::SetPythiaRandom(GetRandom());
@@ -268,7 +268,7 @@ void AliPythia6_dev::EventListing()
 }
 
 void AliPythia6_dev::PrintParticles()
-{ 
+{
   // Print list of particl properties
   Int_t np = 0;
   char*   name = new char[16];

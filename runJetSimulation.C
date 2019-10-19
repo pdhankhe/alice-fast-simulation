@@ -8,7 +8,7 @@
 #include <TROOT.h>
 #include <TString.h>
 
-#include <PythiaProcesses.h>
+#include "PythiaProcess_dev.h"
 #include <AliLog.h>
 
 #include "OnTheFlySimulationGenerator.h"
@@ -34,7 +34,7 @@ void runJetSimulation(TString name, Int_t pythiaEvents, TString procStr, TString
     }
   }
 
-  Process_t proc = kPyMbDefault;
+  ProcessMy_t proc = kPyMbDefault;
   OnTheFlySimulationGenerator::ESpecialParticle_t specialPart = OnTheFlySimulationGenerator::kNoSpecialParticle;
   OnTheFlySimulationGenerator::EGenerator_t partonEvent = OnTheFlySimulationGenerator::kPythia6;
   OnTheFlySimulationGenerator::EGenerator_t hadronization = OnTheFlySimulationGenerator::kPythia6;
@@ -206,6 +206,14 @@ void runJetSimulation(TString name, Int_t pythiaEvents, TString procStr, TString
     else if (procStr == "beauty_lo") {
       proc = kPyBeauty;
       specialPart = OnTheFlySimulationGenerator::kbbbar;
+    }
+    else if(procStr == "charm_ColorHard" ) {
+      proc = kPyCharmColorHard;
+      specialPart = OnTheFlySimulationGenerator::kccbar;
+    }
+    else if(procStr == "charm_ColorSoft" ) {
+      proc = kPyCharmColorSoft;
+      specialPart = OnTheFlySimulationGenerator::kccbar;
     }
     else {
       AliErrorGeneralStream("") << "You choose '" << procStr.Data() << "'. Not clear what process you want to simualte. Aborting." << std::endl;

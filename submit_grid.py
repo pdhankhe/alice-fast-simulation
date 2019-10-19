@@ -311,6 +311,7 @@ def SubmitProcessingJobs(TrainName, LocalPath, AlienPath, AliPhysicsVersion, Off
                    "AliPythia6_dev.h", "AliPythia6_dev.cxx",
                    "AliPythia8_dev.h", "AliPythia8_dev.cxx",
                    "AliPythiaBase_dev.h", "AliPythiaBase_dev.cxx",
+                   "PythiaProcess_dev.h",
                    "AliAnalysisTaskHFJets.h", "AliAnalysisTaskHFJets.cxx",
                    "THepMCParser_dev.h", "THepMCParser_dev.cxx",
                    "libAnalysisCode.so"]

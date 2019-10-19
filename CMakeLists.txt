@@ -47,6 +47,7 @@ set(HEADERS
     ${INC_SRC_DIR}/AliPythiaBase_dev.h
     ${INC_SRC_DIR}/OnTheFlySimulationGenerator.h
     ${INC_SRC_DIR}/THepMCParser_dev.h
+    ${INC_SRC_DIR}/PythiaProcess_dev.h
   )
 # include dirs
 #include_directories(include/)
