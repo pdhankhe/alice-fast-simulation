@@ -6,7 +6,7 @@ How to submit jobs on the Grid from lxplus:
 alien-token-init
 cd alice-fast-simulation
 git checkout taskHFjets
-./test-library.sh
+./build-library.sh
 Edit the config file POWHEG_PYTHIA6_EVTGEN_BEAUTY_13TeV_central.yaml.
 ./submit_grid.py POWHEG_PYTHIA6_EVTGEN_BEAUTY_13TeV_central.yaml
 
