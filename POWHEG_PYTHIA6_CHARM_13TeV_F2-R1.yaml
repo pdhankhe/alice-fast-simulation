@@ -1,15 +1,15 @@
-name: POWHEG_PYTHIA6_EVTGEN_BEAUTY_13TeV_central
+name: POWHEG_PYTHIA6_CHARM_13TeV_F2-R1
 numevents: 10000
 numbjobs: 2000
-gen: powheg+pythia6+evtgen
-proc: beauty
-lhans: 11000
+gen: powheg+pythia6
+proc: charm
 beam_type: pp
+lhans: 11000
 ebeam1: 6500
 ebeam2: 6500
 powheg_config:
   qmass: -1
-  facscfact: 1
+  facscfact: 2
   renscfact: 1
 grid_config:
   ttl: 7200

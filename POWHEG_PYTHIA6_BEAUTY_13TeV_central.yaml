@@ -1,10 +1,10 @@
-name: POWHEG_PYTHIA6_EVTGEN_BEAUTY_13TeV_central
+name: POWHEG_PYTHIA6_BEAUTY_13TeV_central
 numevents: 10000
 numbjobs: 2000
-gen: powheg+pythia6+evtgen
+gen: powheg+pythia6
 proc: beauty
-lhans: 11000
 beam_type: pp
+lhans: 11000
 ebeam1: 6500
 ebeam2: 6500
 powheg_config:
@@ -13,5 +13,5 @@ powheg_config:
   renscfact: 1
 grid_config:
   ttl: 7200
-  max_files_per_job: 100
+  max_files_per_job: 20
   aliphysics: vAN-20181026-1
