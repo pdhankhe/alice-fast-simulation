@@ -335,6 +335,7 @@ void OnTheFlySimulationGenerator::AddLcJet(const char* file_name)
   pHFJetsTask->SetRejectISR(fRejectISR);
   AliAnalysisTaskHFJets::AnalysisEngine* eng = 0;
   eng = pHFJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kLctopK0s, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kChargedJet, 0.4);
+//  eng = pHFJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kD0toKpi, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kChargedJet, 0.4);
   eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
   eng->SetRejectedOriginMap(rejectOrigin);
 
