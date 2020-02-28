@@ -380,7 +380,9 @@ AliAnalysisTaskHFJets::AliJetInfoSummary::AliJetInfoSummary(const AliDmesonJetIn
   fPhi(0),
   fR(0),
   fZ(0),
-  fN(0)
+  fN(0),
+  fZg(0),
+  fRg(0)
 {
   Set(source, n);
 }
@@ -394,6 +396,8 @@ void AliAnalysisTaskHFJets::AliJetInfoSummary::Reset()
   fR = 0;
   fZ = 0;
   fN = 0;
+  fZg = 0;
+  fRg = 0;
 }
 
 /// Set the current object using an instance of AliDmesonJetInfo as its source
@@ -422,6 +426,8 @@ void AliAnalysisTaskHFJets::AliJetInfoSummary::Set(const AliJetInfo& source)
   fN = source.GetNConstituents();
   fR = 0;
   fZ = 0;
+  fZg = source.Zg();
+  fRg = source.Rg();
 }
 
 // Definitions of class AliAnalysisTaskHFJets::AliJetInfoPbPbSummary
@@ -2770,6 +2776,8 @@ Bool_t AliAnalysisTaskHFJets::AnalysisEngine::FindJet(AliAODRecoDecayHF2Prong* D
     if (isDmesonJet) {
       DmesonJet.fJets[jetDef.GetName()].fMomentum.SetPxPyPzE(jets_incl[ijet].px(), jets_incl[ijet].py(), jets_incl[ijet].pz(), jets_incl[ijet].E());
       DmesonJet.fJets[jetDef.GetName()].fNConstituents = nConst;
+      DmesonJet.fJets[jetDef.GetName()].fZg = -1.;
+      DmesonJet.fJets[jetDef.GetName()].fRg = -1.;
       DmesonJet.fJets[jetDef.GetName()].fMaxChargedPt = maxChPt;
       DmesonJet.fJets[jetDef.GetName()].fMaxNeutralPt = maxNePt;
       DmesonJet.fJets[jetDef.GetName()].fNEF = totalNeutralPt / jets_incl[ijet].pt();
@@ -2859,6 +2867,36 @@ void AliAnalysisTaskHFJets::AnalysisEngine::RunParticleLevelAnalysis()
     for (auto jet : jets_incl) {
       Int_t nDmesonsInJet = 0;
 
+      // calculate substructure variables
+      // from PWGHF/treeHF/AliHFJetFinder.cxx AliHFJetFinder::SetJetSubstructureVariables
+      Bool_t bSoftdropped = kFALSE;
+      Float_t fSubJetRadius = 0.2;
+      Float_t fSoftDropZCut = 0.1;
+      Float_t fSoftDropBeta = 0.0;
+      Float_t fMinSubJetPt = 0.0;
+      Float_t dZg = -1., dRg = -1., dZgTmp = -1., dRgTmp = -1.;
+      fastjet::JetDefinition subJet_definition(fastjet::cambridge_algorithm, fSubJetRadius, fastjet::E_scheme, fastjet::Best);
+
+      fastjet::ClusterSequence cluster_sequence(jet.constituents(), subJet_definition);
+      std::vector<fastjet::PseudoJet> reclustered_jet = fastjet::sorted_by_pt(cluster_sequence.inclusive_jets(fMinSubJetPt));
+
+      fastjet::PseudoJet daughter_jet = reclustered_jet[0];
+      fastjet::PseudoJet parent_subjet_1;
+      fastjet::PseudoJet parent_subjet_2;
+
+      while (daughter_jet.has_parents(parent_subjet_1, parent_subjet_2)) {
+        if (parent_subjet_1.perp() < parent_subjet_2.perp())
+          std::swap(parent_subjet_1, parent_subjet_2);
+        dZgTmp = parent_subjet_2.perp() / (parent_subjet_1.perp() + parent_subjet_2.perp());
+        dRgTmp = parent_subjet_1.delta_R(parent_subjet_2);
+        if (dZgTmp >= fSoftDropZCut * TMath::Power(dRgTmp / jetDef.fRadius, fSoftDropBeta) && !bSoftdropped) {
+            dZg = dZgTmp;
+            dRg = dRgTmp;
+            bSoftdropped = kTRUE;
+        }
+        daughter_jet = parent_subjet_1;
+      }
+
       for (auto constituent : jet.constituents()) {
         Int_t iPart = constituent.user_index() - 100;
         if (constituent.perp() < 1e-6) continue; // reject ghost particles
@@ -2908,6 +2946,8 @@ void AliAnalysisTaskHFJets::AnalysisEngine::RunParticleLevelAnalysis()
 
           (*dMesonJetIt).second.fJets[jetDef.GetName()].fMomentum.SetPxPyPzE(jet.px(), jet.py(), jet.pz(), jet.E());
           (*dMesonJetIt).second.fJets[jetDef.GetName()].fNConstituents = jet.constituents().size();
+          (*dMesonJetIt).second.fJets[jetDef.GetName()].fZg = dZg;
+          (*dMesonJetIt).second.fJets[jetDef.GetName()].fRg = dRg;
           (*dMesonJetIt).second.fJets[jetDef.GetName()].fArea = jet.area();
           (*dMesonJetIt).second.fJets[jetDef.GetName()].fCorrPt = (*dMesonJetIt).second.fJets[jetDef.GetName()].fMomentum.Pt() - jet.area() * rho;
           if (jet.perp() > maxJetPt[&jetDef]) maxJetPt[&jetDef] = jet.perp();

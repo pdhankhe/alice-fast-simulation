@@ -177,6 +177,8 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
     Double_t Phi()       const { return fMomentum.Phi()      ; }
     Double_t Phi_0_2pi() const { return fMomentum.Phi_0_2pi(); }
     Double_t CorrPt()    const { return fCorrPt              ; }
+    Double_t Zg()        const { return fZg                  ; }
+    Double_t Rg()        const { return fRg                  ; }
     Int_t GetNConstituents() const { return  fNConstituents; }
     Double_t GetDistance(const AliJetInfo& jet, Double_t& deta, Double_t& dphi) const;
     Double_t GetDistance(const AliJetInfo& jet) const;
@@ -188,6 +190,8 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
     Double_t          fMaxNeutralPt         ; ///< Transverse momentum of the leading neutral particle (or cluster)
     Double_t          fArea                 ; ///< Jet area
     Double_t          fCorrPt               ; ///< Transverse momentum of the jet after subtracting the average background
+    Double_t          fZg                   ; ///< substructure z_g
+    Double_t          fRg                   ; ///< substructure R_g
 
     /// \cond CLASSIMP
     ClassDef(AliJetInfo, 2);
@@ -266,6 +270,10 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
     Double32_t  fZ         ; //[0,1.024,10]
     /// Number of jet constituents
     Double32_t  fN         ; //[0, 64, 6]
+    /// z_g
+    Double32_t  fZg        ;
+    /// R_g
+    Double32_t  fRg        ;
 
     /// \cond CLASSIMP
     ClassDef(AliJetInfoSummary, 4);
