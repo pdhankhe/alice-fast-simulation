@@ -22,7 +22,6 @@
 #include <AliLog.h>
 
 // AliPhysics classes
-#include <AliAnalysisTaskDmesonJets.h>
 #include <AliEmcalJetTask.h>
 #include <AliAnalysisTaskEmcalJetTree.h>
 #include <AliAnalysisTaskEmcalJetQA.h>
@@ -65,9 +64,9 @@ OnTheFlySimulationGenerator::OnTheFlySimulationGenerator() :
   fDebugClassNames({"AliGenPythia_dev", "AliPythia6_dev", "AliPythia8_dev",
   "AliGenEvtGen_dev", "AliGenExtFile_dev", "AliGenReaderHepMC_dev", "THepMCParser_dev",
   "AliMCGenHandler",
-  "AliAnalysisTaskEmcalJetQA", "AliAnalysisTaskDmesonJets", "AliAnalysisTaskHFJets", "AliEmcalJetTask",
+  "AliAnalysisTaskEmcalJetQA", "AliAnalysisTaskHFJets", "AliEmcalJetTask",
   "AliAnalysisTaskEmcalJetTree<AliEmcalJetInfoSummaryPP, AliEmcalJetEventInfoSummaryPP>",
-  "AliAnalysisTaskDmesonJets::AnalysisEngine", "AliAnalysisTaskHFJets::AnalysisEngine"})
+  "AliAnalysisTaskHFJets::AnalysisEngine"})
 {
 }
 
@@ -101,9 +100,9 @@ OnTheFlySimulationGenerator::OnTheFlySimulationGenerator(TString taskname) :
   fDebugClassNames({"AliGenPythia_dev", "AliPythia6_dev", "AliPythia8_dev",
   "AliGenEvtGen_dev", "AliGenExtFile_dev", "AliGenReaderHepMC_dev", "THepMCParser_dev",
   "AliMCGenHandler",
-  "AliAnalysisTaskEmcalJetQA", "AliAnalysisTaskDmesonJets", "AliAnalysisTaskHFJets", "AliEmcalJetTask",
+  "AliAnalysisTaskEmcalJetQA", "AliAnalysisTaskHFJets", "AliEmcalJetTask",
   "AliAnalysisTaskEmcalJetTree<AliEmcalJetInfoSummaryPP, AliEmcalJetEventInfoSummaryPP>",
-  "AliAnalysisTaskDmesonJets::AnalysisEngine", "AliAnalysisTaskHFJets::AnalysisEngine"})
+  "AliAnalysisTaskHFJets::AnalysisEngine"})
 {
 }
 
@@ -134,7 +133,7 @@ OnTheFlySimulationGenerator::OnTheFlySimulationGenerator(TString taskname, Int_t
   fHadronization(kPythia6),
   fDecayer(kPythia6),
   fExtendedEventInfo(kFALSE),
-  fDebugClassNames({"AliGenPythia_dev", "AliPythia6_dev", "AliPythia8_dev", "AliGenEvtGen_dev", "AliGenPythia", "AliPythia", "AliPythia8", "AliGenEvtGen", "AliMCGenHandler", "AliEmcalMCTrackSelector", "AliAnalysisTaskEmcalJetQA", "AliAnalysisTaskDmesonJets", "AliAnalysisTaskHFJets", "AliEmcalJetTask", "AliAnalysisTaskEmcalJetTree<AliEmcalJetInfoSummaryPP, AliEmcalJetEventInfoSummaryPP>"})
+  fDebugClassNames({"AliGenPythia_dev", "AliPythia6_dev", "AliPythia8_dev", "AliGenEvtGen_dev", "AliGenPythia", "AliPythia", "AliPythia8", "AliGenEvtGen", "AliMCGenHandler", "AliEmcalMCTrackSelector", "AliAnalysisTaskEmcalJetQA", "AliAnalysisTaskHFJets", "AliEmcalJetTask", "AliAnalysisTaskEmcalJetTree<AliEmcalJetInfoSummaryPP, AliEmcalJetEventInfoSummaryPP>"})
 {
 }
 
@@ -183,7 +182,7 @@ void OnTheFlySimulationGenerator::PrepareAnalysisManager()
   AliEmcalMCTrackSelector* pMCTrackSel = AliEmcalMCTrackSelector::AddTaskMCTrackSelector("mcparticles",kFALSE,kFALSE,-1,kFALSE);
 
 //  if (fJetQA) AddJetQA();
-//  if (fDMesonJets) AddDJet();
+  if (fDMesonJets) AddDJet();
   if (fLcJets) AddLcJet();
 
   /*
@@ -262,7 +261,7 @@ void OnTheFlySimulationGenerator::AddDJet(const char* file_name)
 
   UInt_t rejectOrigin = 0;
 
-  AliAnalysisTaskDmesonJets* pDMesonJetsTask = AliAnalysisTaskDmesonJets::AddTaskDmesonJets("", "", "usedefault", 2);
+  AliAnalysisTaskHFJets* pDMesonJetsTask = AliAnalysisTaskHFJets::AddTaskHFJets("", "", "usedefault", 2);
   pDMesonJetsTask->SetVzRange(-999,999);
   pDMesonJetsTask->SetPtHardRange(fMinPtHard, fMaxPtHard);
   if (fMinPtHard > -1 && fMaxPtHard > fMinPtHard) pDMesonJetsTask->SetMCFilter();
@@ -272,31 +271,31 @@ void OnTheFlySimulationGenerator::AddDJet(const char* file_name)
   pDMesonJetsTask->SetForceBeamType(AliAnalysisTaskEmcalLight::kpp);
   pDMesonJetsTask->SetCentralityEstimation(AliAnalysisTaskEmcalLight::kNoCentrality);
   if (fExtendedEventInfo) {
-    pDMesonJetsTask->SetOutputType(AliAnalysisTaskDmesonJets::kTreeExtendedOutput);
+    pDMesonJetsTask->SetOutputType(AliAnalysisTaskHFJets::kTreeExtendedOutput);
   }
   else {
-    pDMesonJetsTask->SetOutputType(AliAnalysisTaskDmesonJets::kTreeOutput);
+    pDMesonJetsTask->SetOutputType(AliAnalysisTaskHFJets::kTreeOutput);
   }
   pDMesonJetsTask->SetApplyKinematicCuts(kTRUE);
   pDMesonJetsTask->SetRejectISR(fRejectISR);
-  AliAnalysisTaskDmesonJets::AnalysisEngine* eng = 0;
-  eng = pDMesonJetsTask->AddAnalysisEngine(AliAnalysisTaskDmesonJets::kD0toKpi, "", "", AliAnalysisTaskDmesonJets::kMCTruth, AliJetContainer::kChargedJet, 0.4);
-  eng->SetAcceptedDecayMap(AliAnalysisTaskDmesonJets::EMesonDecayChannel_t::kAnyDecay);
+  AliAnalysisTaskHFJets::AnalysisEngine* eng = 0;
+  eng = pDMesonJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kD0toKpi, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kChargedJet, 0.4);
+  eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
   eng->SetRejectedOriginMap(rejectOrigin);
-//  eng = pDMesonJetsTask->AddAnalysisEngine(AliAnalysisTaskDmesonJets::kD0toKpi, "", "", AliAnalysisTaskDmesonJets::kMCTruth, AliJetContainer::kChargedJet, 0.6);
-//  eng->SetAcceptedDecayMap(AliAnalysisTaskDmesonJets::EMesonDecayChannel_t::kAnyDecay);
+//  eng = pDMesonJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kD0toKpi, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kChargedJet, 0.6);
+//  eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
 //  eng->SetRejectedOriginMap(rejectOrigin);
-//  eng = pDMesonJetsTask->AddAnalysisEngine(AliAnalysisTaskDmesonJets::kD0toKpi, "", "", AliAnalysisTaskDmesonJets::kMCTruth, AliJetContainer::kFullJet, 0.4);
-//  eng->SetAcceptedDecayMap(AliAnalysisTaskDmesonJets::EMesonDecayChannel_t::kAnyDecay);
+//  eng = pDMesonJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kD0toKpi, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kFullJet, 0.4);
+//  eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
 //  eng->SetRejectedOriginMap(rejectOrigin);
-//  eng = pDMesonJetsTask->AddAnalysisEngine(AliAnalysisTaskDmesonJets::kDstartoKpipi, "", "", AliAnalysisTaskDmesonJets::kMCTruth, AliJetContainer::kChargedJet, 0.4);
-//  eng->SetAcceptedDecayMap(AliAnalysisTaskDmesonJets::EMesonDecayChannel_t::kAnyDecay);
+//  eng = pDMesonJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kDstartoKpipi, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kChargedJet, 0.4);
+//  eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
 //  eng->SetRejectedOriginMap(rejectOrigin);
-//  eng = pDMesonJetsTask->AddAnalysisEngine(AliAnalysisTaskDmesonJets::kDstartoKpipi, "", "", AliAnalysisTaskDmesonJets::kMCTruth, AliJetContainer::kChargedJet, 0.6);
-//  eng->SetAcceptedDecayMap(AliAnalysisTaskDmesonJets::EMesonDecayChannel_t::kAnyDecay);
+//  eng = pDMesonJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kDstartoKpipi, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kChargedJet, 0.6);
+//  eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
 //  eng->SetRejectedOriginMap(rejectOrigin);
-//  eng = pDMesonJetsTask->AddAnalysisEngine(AliAnalysisTaskDmesonJets::kDstartoKpipi, "", "", AliAnalysisTaskDmesonJets::kMCTruth, AliJetContainer::kFullJet, 0.4);
-//  eng->SetAcceptedDecayMap(AliAnalysisTaskDmesonJets::EMesonDecayChannel_t::kAnyDecay);
+//  eng = pDMesonJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kDstartoKpipi, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kFullJet, 0.4);
+//  eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
 //  eng->SetRejectedOriginMap(rejectOrigin);
 
   if (!fname.IsNull()) {
