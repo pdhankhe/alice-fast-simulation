@@ -14,5 +14,5 @@ How to run a job locally:
 
 ./submit_grid.py POWHEG_PYTHIA6_EVTGEN_BEAUTY_13TeV_central.yaml --offline
 cd <created directory>
-./runFastSim.py POWHEG_PYTHIA6_EVTGEN_BEAUTY_13TeV_central.yaml --numevents 1 --minpthard -1 --maxpthard -1 --batch-job grid --powheg-stage 0
+./runFastSim.py POWHEG_PYTHIA6_EVTGEN_BEAUTY_13TeV_central.yaml --numevents 1 --batch-job grid
 
