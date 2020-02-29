@@ -261,7 +261,7 @@ void OnTheFlySimulationGenerator::AddDJet(const char* file_name)
 
   UInt_t rejectOrigin = 0;
 
-  AliAnalysisTaskHFJets* pDMesonJetsTask = AliAnalysisTaskHFJets::AddTaskHFJets("", "", "usedefault", 2);
+  AliAnalysisTaskHFJets* pDMesonJetsTask = AliAnalysisTaskHFJets::AddTaskHFJets("", "", "usedefault", 2, "D0");
   pDMesonJetsTask->SetVzRange(-999,999);
   pDMesonJetsTask->SetPtHardRange(fMinPtHard, fMaxPtHard);
   if (fMinPtHard > -1 && fMaxPtHard > fMinPtHard) pDMesonJetsTask->SetMCFilter();
@@ -315,7 +315,7 @@ void OnTheFlySimulationGenerator::AddLcJet(const char* file_name)
 
   UInt_t rejectOrigin = 0;
 
-  AliAnalysisTaskHFJets* pHFJetsTask = AliAnalysisTaskHFJets::AddTaskHFJets("", "", "usedefault", 2);
+  AliAnalysisTaskHFJets* pHFJetsTask = AliAnalysisTaskHFJets::AddTaskHFJets("", "", "usedefault", 2, "Lc");
   pHFJetsTask->SetVzRange(-999,999);
   pHFJetsTask->SetPtHardRange(fMinPtHard, fMaxPtHard);
   if (fMinPtHard > -1 && fMaxPtHard > fMinPtHard) pHFJetsTask->SetMCFilter();
