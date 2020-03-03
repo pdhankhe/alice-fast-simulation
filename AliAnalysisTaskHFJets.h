@@ -179,6 +179,7 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
     Double_t CorrPt()    const { return fCorrPt              ; }
     Double_t Zg()        const { return fZg                  ; }
     Double_t Rg()        const { return fRg                  ; }
+    Int_t NSD()          const { return fNSD                 ; }
     Int_t GetNConstituents() const { return  fNConstituents; }
     Double_t GetDistance(const AliJetInfo& jet, Double_t& deta, Double_t& dphi) const;
     Double_t GetDistance(const AliJetInfo& jet) const;
@@ -192,9 +193,10 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
     Double_t          fCorrPt               ; ///< Transverse momentum of the jet after subtracting the average background
     Double_t          fZg                   ; ///< substructure z_g
     Double_t          fRg                   ; ///< substructure R_g
+    Int_t             fNSD                  ; ///< substructure n_SD
 
     /// \cond CLASSIMP
-    ClassDef(AliJetInfo, 2);
+    ClassDef(AliJetInfo, 3);
     /// \endcond
   };
 
@@ -250,7 +252,7 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
   /// information in a very compact data structure (55 bits)
   class AliJetInfoSummary {
   public:
-    AliJetInfoSummary() : fPt(0), fEta(0), fPhi(0), fR(0), fZ(0), fN(0) {;}
+    AliJetInfoSummary() : fPt(0), fEta(0), fPhi(0), fR(0), fZ(0), fN(0), fZg(0), fRg(0), fNSD(0) {;}
     AliJetInfoSummary(const AliDmesonJetInfo& source, std::string n);
     virtual ~AliJetInfoSummary() {}
 
@@ -274,9 +276,11 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
     Double32_t  fZg        ;
     /// R_g
     Double32_t  fRg        ;
+    /// n_SD
+    Double32_t  fNSD       ;
 
     /// \cond CLASSIMP
-    ClassDef(AliJetInfoSummary, 4);
+    ClassDef(AliJetInfoSummary, 5);
     /// \endcond
   };
 
