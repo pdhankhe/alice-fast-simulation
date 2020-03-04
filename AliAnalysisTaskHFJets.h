@@ -166,9 +166,9 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
   /// information that can be easily passed to a function.
   class AliJetInfo {
   public:
-    AliJetInfo() : fMomentum(), fNConstituents(0), fNEF(0), fMaxChargedPt(0), fMaxNeutralPt(0), fArea(0), fCorrPt(0) {}
+    AliJetInfo() : fMomentum(), fNConstituents(0), fNEF(0), fMaxChargedPt(0), fMaxNeutralPt(0), fArea(0), fCorrPt(0), fZg(-1), fRg(-1), fNSD(-1), fPtMother(-1), fK0(-1), fK1(-1), fK2(-1), fKT(-1) {}
     AliJetInfo(Double_t px, Double_t py, Double_t pz, Double_t E, Int_t nconst, Double_t nef, Double_t cpt, Double_t npt) :
-      fMomentum(px, py, pz, E), fNConstituents(nconst), fNEF(nef), fMaxChargedPt(cpt), fMaxNeutralPt(npt), fArea(0), fCorrPt(0) {}
+      fMomentum(px, py, pz, E), fNConstituents(nconst), fNEF(nef), fMaxChargedPt(cpt), fMaxNeutralPt(npt), fArea(0), fCorrPt(0), fZg(-1), fRg(-1), fNSD(-1), fPtMother(-1), fK0(-1), fK1(-1), fK2(-1), fKT(-1) {}
 
     virtual ~AliJetInfo() {;}
 
@@ -180,6 +180,11 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
     Double_t Zg()        const { return fZg                  ; }
     Double_t Rg()        const { return fRg                  ; }
     Int_t NSD()          const { return fNSD                 ; }
+    Double_t PtMother()  const { return fPtMother            ; }
+    Double_t K0()        const { return fK0                  ; }
+    Double_t K1()        const { return fK1                  ; }
+    Double_t K2()        const { return fK2                  ; }
+    Double_t KT()        const { return fKT                  ; }
     Int_t GetNConstituents() const { return  fNConstituents; }
     Double_t GetDistance(const AliJetInfo& jet, Double_t& deta, Double_t& dphi) const;
     Double_t GetDistance(const AliJetInfo& jet) const;
@@ -194,9 +199,14 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
     Double_t          fZg                   ; ///< substructure z_g
     Double_t          fRg                   ; ///< substructure R_g
     Int_t             fNSD                  ; ///< substructure n_SD
+    Double_t          fPtMother             ; ///< substructure pT of the SD mother subjet
+    Double_t          fK0                   ; ///< substructure k_0
+    Double_t          fK1                   ; ///< substructure k_1
+    Double_t          fK2                   ; ///< substructure k_2
+    Double_t          fKT                   ; ///< substructure k_T
 
     /// \cond CLASSIMP
-    ClassDef(AliJetInfo, 3);
+    ClassDef(AliJetInfo, 4);
     /// \endcond
   };
 
@@ -252,7 +262,7 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
   /// information in a very compact data structure (55 bits)
   class AliJetInfoSummary {
   public:
-    AliJetInfoSummary() : fPt(0), fEta(0), fPhi(0), fR(0), fZ(0), fN(0), fZg(0), fRg(0), fNSD(0) {;}
+    AliJetInfoSummary() : fPt(0), fEta(0), fPhi(0), fR(0), fZ(-1), fN(-1), fZg(-1), fRg(-1), fNSD(-1), fPtMother(-1), fK0(-1), fK1(-1), fK2(-1), fKT(-1) {;}
     AliJetInfoSummary(const AliDmesonJetInfo& source, std::string n);
     virtual ~AliJetInfoSummary() {}
 
@@ -278,9 +288,19 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
     Double32_t  fRg        ;
     /// n_SD
     Double32_t  fNSD       ;
+    /// pT of the SD mother subjet
+    Double32_t  fPtMother  ;
+    /// k_0
+    Double32_t  fK0        ;
+    /// k_1
+    Double32_t  fK1        ;
+    /// k_2
+    Double32_t  fK2        ;
+    /// k_T
+    Double32_t  fKT        ;
 
     /// \cond CLASSIMP
-    ClassDef(AliJetInfoSummary, 5);
+    ClassDef(AliJetInfoSummary, 6);
     /// \endcond
   };
 
