@@ -262,7 +262,7 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
   /// information in a very compact data structure (55 bits)
   class AliJetInfoSummary {
   public:
-    AliJetInfoSummary() : fPt(0), fEta(0), fPhi(0), fR(0), fZ(-1), fN(-1), fZg(-1), fRg(-1), fNSD(-1), fPtMother(-1), fK0(-1), fK1(-1), fK2(-1), fKT(-1) {;}
+    AliJetInfoSummary() : fPt(0), fEta(0), fPhi(0), fR(-1), fZ(-1), fN(-1), fZg(-1), fRg(-1), fNSD(-1), fPtMother(-1), fK0(-1), fK1(-1), fK2(-1), fKT(-1) {;}
     AliJetInfoSummary(const AliDmesonJetInfo& source, std::string n);
     virtual ~AliJetInfoSummary() {}
 
@@ -354,7 +354,7 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
     /// Phi of the D meson
     Double32_t   fPhi    ; //[0,2*pi,10]
     /// Y of the D meson
-    Double32_t   fY    ;
+    Double32_t   fY      ;
 
     /// \cond CLASSIMP
     ClassDef(AliDmesonInfoSummary, 2);
@@ -379,8 +379,8 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
     Double32_t   fPartonType  ; //[0, 16, 4]
     /// Transverse momentum of the parton
     Double32_t   fPartonPt    ; //[0,819.2,14]
-
-    UShort_t     fAncestorPDG ; /// Absolute PDG of the ancestor particle
+    /// Absolute PDG of the ancestor particle
+    UShort_t     fAncestorPDG ;
 
     /// \cond CLASSIMP
     ClassDef(AliDmesonMCInfoSummary, 3);

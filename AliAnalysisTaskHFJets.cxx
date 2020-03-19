@@ -194,22 +194,34 @@ AliAnalysisTaskHFJets::AliDmesonJetInfo& AliAnalysisTaskHFJets::AliDmesonJetInfo
 /// Reset all fields to their default values
 void AliAnalysisTaskHFJets::AliDmesonJetInfo::Reset()
 {
+  fDmesonParticle = 0;
   fD.SetPtEtaPhiE(0,0,0,0);
   fSoftPionPt = 0;
   fInvMass2Prong = 0;
-  fDmesonParticle = 0;
   fMCLabel = -1;
   fReconstructed = kFALSE;
   fParton = 0;
   fPartonType = 0;
   fAncestor = 0;
   fD0D0bar = kFALSE;
+  fSelectionType = 0;
+  fEvent = nullptr;
   for (auto &jet : fJets) {
     jet.second.fMomentum.SetPtEtaPhiE(0,0,0,0);
     jet.second.fNConstituents = 0;
     jet.second.fNEF = 0;
     jet.second.fMaxChargedPt = 0;
     jet.second.fMaxNeutralPt = 0;
+    jet.second.fArea = 0;
+    jet.second.fCorrPt = 0;
+    jet.second.fZg = -1;
+    jet.second.fRg = -1;
+    jet.second.fNSD = -1;
+    jet.second.fPtMother = -1;
+    jet.second.fK0 = -1;
+    jet.second.fK1 = -1;
+    jet.second.fK2 = -1;
+    jet.second.fKT = -1;
   }
 }
 
@@ -378,9 +390,9 @@ AliAnalysisTaskHFJets::AliJetInfoSummary::AliJetInfoSummary(const AliDmesonJetIn
   fPt(0),
   fEta(0),
   fPhi(0),
-  fR(0),
-  fZ(0),
-  fN(0),
+  fR(-1),
+  fZ(-1),
+  fN(-1),
   fZg(-1),
   fRg(-1),
   fNSD(-1),
@@ -399,9 +411,9 @@ void AliAnalysisTaskHFJets::AliJetInfoSummary::Reset()
   fPt = 0;
   fEta = 0;
   fPhi = 0;
-  fR = 0;
-  fZ = 0;
-  fN = 0;
+  fR = -1;
+  fZ = -1;
+  fN = -1;
   fZg = -1;
   fRg = -1;
   fNSD = -1;
@@ -435,9 +447,9 @@ void AliAnalysisTaskHFJets::AliJetInfoSummary::Set(const AliJetInfo& source)
   fPt = source.Pt();
   fEta = source.Eta();
   fPhi = source.Phi_0_2pi();
+  fR = -1;
+  fZ = -1;
   fN = source.GetNConstituents();
-  fR = 0;
-  fZ = 0;
   fZg = source.Zg();
   fRg = source.Rg();
   fNSD = source.NSD();
@@ -629,6 +641,8 @@ AliAnalysisTaskHFJets::AliD0ExtendedInfoSummary::AliD0ExtendedInfoSummary(const 
   AliD0InfoSummary(source),
   fDCA(0),
   fCosThetaStar(0),
+  fPtK(0),
+  fPtPi(0),
   fd0K(0),
   fd0Pi(0),
   fd0d0(0),
@@ -694,6 +708,17 @@ void AliAnalysisTaskHFJets::AliD0ExtendedInfoSummary::Set(const AliDmesonJetInfo
     fd0d0 = recoDecay->Prodd0d0();
     fCosPointing = recoDecay->CosPointingAngle();
   }
+  else {
+    fDCA = 0;
+    fCosThetaStar = 0;
+    fPtK = 0;
+    fPtPi = 0;
+    fd0K = 0;
+    fd0Pi = 0;
+    fd0d0 = 0;
+    fCosPointing = 0;
+    fMaxNormd0 = 0;
+  }
 }
 
 /// Reset the object
@@ -702,6 +727,8 @@ void AliAnalysisTaskHFJets::AliD0ExtendedInfoSummary::Reset()
   AliD0InfoSummary::Reset();
   fDCA = 0;
   fCosThetaStar = 0;
+  fPtK = 0;
+  fPtPi = 0;
   fd0K = 0;
   fd0Pi = 0;
   fd0d0 = 0;
@@ -739,7 +766,6 @@ void AliAnalysisTaskHFJets::AliDStarInfoSummary::Set(const AliDmesonJetInfo& sou
 void AliAnalysisTaskHFJets::AliDStarInfoSummary::Reset()
 {
   AliDmesonInfoSummary::Reset();
-
   f2ProngInvMass = 0;
   fDeltaInvMass = 0;
 }
@@ -1670,7 +1696,8 @@ AliAnalysisTaskHFJets::AliHFJetDefinition::AliHFJetDefinition() :
   fMinNeutralPt(0.),
   fMaxNeutralPt(0.),
   fRhoName(),
-  fRho(0)
+  fRho(0),
+  fJets()
 {
 }
 
@@ -1697,7 +1724,8 @@ AliAnalysisTaskHFJets::AliHFJetDefinition::AliHFJetDefinition(EJetType_t type, D
   fMinNeutralPt(0.),
   fMaxNeutralPt(0.),
   fRhoName(),
-  fRho(0)
+  fRho(0),
+  fJets()
 {
 }
 
@@ -1714,17 +1742,18 @@ AliAnalysisTaskHFJets::AliHFJetDefinition::AliHFJetDefinition(EJetType_t type, D
   fJetAlgo(algo),
   fRecoScheme(reco),
   fMinJetPt(0.),
-  fMaxJetPt(0.),
+  fMaxJetPt(500.),
   fMinJetPhi(0.),
   fMaxJetPhi(0.),
-  fMinJetEta(0.),
-  fMaxJetEta(0.),
+  fMinJetEta(-1.),
+  fMaxJetEta(1.),
   fMinChargedPt(0.),
   fMaxChargedPt(0.),
   fMinNeutralPt(0.),
   fMaxNeutralPt(0.),
   fRhoName(rhoName),
-  fRho(0)
+  fRho(0),
+  fJets()
 {
 }
 
@@ -1748,7 +1777,8 @@ AliAnalysisTaskHFJets::AliHFJetDefinition::AliHFJetDefinition(const AliHFJetDefi
   fMinNeutralPt(source.fMinNeutralPt),
   fMaxNeutralPt(source.fMaxNeutralPt),
   fRhoName(source.fRhoName),
-  fRho(0)
+  fRho(source.fRho),
+  fJets(source.fJets)
 {
 }
 
@@ -1908,6 +1938,7 @@ AliAnalysisTaskHFJets::AnalysisEngine::AnalysisEngine(ECandidateType_t type, EMC
   fOutputHandler(nullptr),
   fRandomGen(0),
   fTrackEfficiency(0),
+  fRejectISR(kFALSE),
   fDmesonJets(),
   fCandidateArray(0),
   fMCContainer(),
@@ -1945,9 +1976,11 @@ AliAnalysisTaskHFJets::AnalysisEngine::AnalysisEngine(const AliAnalysisTaskHFJet
   fPtBinWidth(source.fPtBinWidth),
   fMaxPt(source.fMaxPt),
   fD0Extended(source.fD0Extended),
+  fOutputHandler(source.fOutputHandler),
   fRandomGen(source.fRandomGen),
   fTrackEfficiency(source.fTrackEfficiency),
-  fDmesonJets(),
+  fRejectISR(source.fRejectISR),
+  fDmesonJets(source.fDmesonJets),
   fCandidateArray(source.fCandidateArray),
   fMCContainer(source.fMCContainer),
   fTrackContainers(source.fTrackContainers),
@@ -1955,8 +1988,8 @@ AliAnalysisTaskHFJets::AnalysisEngine::AnalysisEngine(const AliAnalysisTaskHFJet
   fAodEvent(source.fAodEvent),
   fFastJetWrapper(source.fFastJetWrapper),
   fHistManager(source.fHistManager),
-  fEventInfo(),
-  fName()
+  fEventInfo(source.fEventInfo),
+  fName(source.fName)
 {
   SetRDHFCuts(source.fRDHFCuts);
 }
