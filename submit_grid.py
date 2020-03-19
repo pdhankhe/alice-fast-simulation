@@ -298,21 +298,21 @@ def SubmitProcessingJobs(TrainName, LocalPath, AlienPath, AliPhysicsVersion, Off
 
     FilesToDelete = [JdlFile]
 
-    FilesToCopy = [yamlFileName, "OnTheFlySimulationGenerator.cxx", "OnTheFlySimulationGenerator.h",
+    FilesToCopy = [yamlFileName, "OnTheFlySimulationGenerator.h", #"OnTheFlySimulationGenerator.cxx",
                    "runJetSimulation.C", "start_simulation.C",
                    "lhapdf_utils.py",
 #                   "CMakeLists.txt", "AnalysisCodeLinkDef.h",
                    "HepMC.tar",
-                   "AliGenExtFile_dev.h", "AliGenExtFile_dev.cxx",
-                   "AliGenReaderHepMC_dev.h", "AliGenReaderHepMC_dev.cxx",
-                   "AliGenEvtGen_dev.h", "AliGenEvtGen_dev.cxx",
-                   "AliGenPythia_dev.h", "AliGenPythia_dev.cxx",
-                   "AliPythia6_dev.h", "AliPythia6_dev.cxx",
-                   "AliPythia8_dev.h", "AliPythia8_dev.cxx",
-                   "AliPythiaBase_dev.h", "AliPythiaBase_dev.cxx",
+                   "AliGenExtFile_dev.h", #"AliGenExtFile_dev.cxx",
+                   "AliGenReaderHepMC_dev.h", #"AliGenReaderHepMC_dev.cxx",
+                   "AliGenEvtGen_dev.h", #"AliGenEvtGen_dev.cxx",
+                   "AliGenPythia_dev.h", #"AliGenPythia_dev.cxx",
+                   "AliPythia6_dev.h", #"AliPythia6_dev.cxx",
+                   "AliPythia8_dev.h", #"AliPythia8_dev.cxx",
+                   "AliPythiaBase_dev.h", #"AliPythiaBase_dev.cxx",
                    "PythiaProcess_dev.h",
-                   "AliAnalysisTaskHFJets.h", "AliAnalysisTaskHFJets.cxx",
-                   "THepMCParser_dev.h", "THepMCParser_dev.cxx",
+                   "AliAnalysisTaskHFJets.h", #"AliAnalysisTaskHFJets.cxx",
+                   "THepMCParser_dev.h", #"THepMCParser_dev.cxx",
                    "libAnalysisCode.so"]
 
     Packages = ""
