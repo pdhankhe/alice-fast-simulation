@@ -46,7 +46,7 @@ public:
 
   void SetName(TString taskname)                          { fName            = taskname      ; }
   void SetNumberOfEvents(Int_t numevents)                 { fEvents          = numevents     ; }
-  void SetProcess(ProcessMy_t proc)                         { fProcess         = proc          ; }
+  void SetProcess(ProcessMy_t proc)                       { fProcess         = proc          ; }
   void SetSpecialParticle(ESpecialParticle_t specialPart) { fSpecialParticle = specialPart   ; }
   void SetSeed(Int_t seed)                                { fSeed            = seed          ; }
   void SetLHEFile(TString lhe)                            { fLHEFile         = lhe           ; }
@@ -81,7 +81,7 @@ public:
 
   const TString&     GetName()               const { return fName           ; }
   Int_t              GetNumberOfEvents()     const { return fEvents         ; }
-  ProcessMy_t          GetProcess()            const { return fProcess        ; }
+  ProcessMy_t        GetProcess()            const { return fProcess        ; }
   ESpecialParticle_t GetSpecialParticle()    const { return fSpecialParticle; }
   Int_t              GetSeed()               const { return fSeed           ; }
   const TString&     GetLHEFile()            const { return fLHEFile        ; }
@@ -105,7 +105,7 @@ protected:
   TString              fName             ;
   AliAnalysisManager*  fAnalysisManager  ;
   Int_t                fEvents           ;
-  ProcessMy_t            fProcess          ;
+  ProcessMy_t          fProcess          ;
   ESpecialParticle_t   fSpecialParticle  ;
   Int_t                fSeed             ;
   TString              fLHEFile          ;
