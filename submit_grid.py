@@ -317,7 +317,6 @@ def SubmitProcessingJobs(TrainName, LocalPath, AlienPath, AliPhysicsVersion, Off
                    "libAnalysisCode.so"]
 
     Packages = "\"VO_ALICE@Python-modules::1.0-12\",\n"
-    Packages += "\"VO_ALICE@CMake::v2.8.12-2\",\n"
     if not LoadPackagesSeparately:
         Packages += "\"VO_ALICE@AliPhysics::{aliphysics}\",\n".format(aliphysics=AliPhysicsVersion)
 
