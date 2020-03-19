@@ -2,6 +2,12 @@
 
 macroname="testload.C"
 
+if [ -z "$ALIPHYSICS_RELEASE" ]
+then
+    echo "Error: AliPhysics not loaded."
+    exit 1
+fi
+
 echo "ROOT: $ROOT_RELEASE, AliRoot: $ALIROOT_RELEASE, AliPhysics: $ALIPHYSICS_RELEASE"
 echo "Compiling the library"
 rm -rf CMakeCache.txt CMakeFiles cmake_install.cmake G__*
