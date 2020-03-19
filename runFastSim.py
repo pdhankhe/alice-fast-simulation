@@ -146,6 +146,7 @@ def RunPowhegSingle(powhegExe, load_packages_separately):
         print(line)
 
     if load_packages_separately:
+        print("Running POWHEG...")
         with open("powheg.log", "w") as myfile:
             shell = subprocess.Popen(["bash"], stdin=subprocess.PIPE, stdout=myfile, stderr=myfile)
             shell.stdin.write("alienv enter VO_ALICE@POWHEG::r3178-alice1-1\n")
@@ -364,6 +365,9 @@ def main(events, powheg_stage, job_number, yamlConfigFile, batch_job, input_even
     if batch_job != "grid":
         load_packages_separately = False
 
+    # Always load packages separately.
+    load_packages_separately = True
+
     if not load_packages_separately:
         try:
             rootPath = subprocess.check_output(["which", "root"]).rstrip()
@@ -443,7 +447,7 @@ def main(events, powheg_stage, job_number, yamlConfigFile, batch_job, input_even
             shell = subprocess.Popen(["bash"], stdin=subprocess.PIPE, stdout=myfile, stderr=myfile)
             shell.stdin.write("alienv enter {}\n".format(aliphysics_pkg))
             shell.stdin.write("which aliroot\n")
-            shell.stdin.write("make\n")
+#            shell.stdin.write("make\n")
             shell.stdin.write("aliroot -b -l -q 'start_simulation.C(\"{0}\", {1}, \"{2}\", \"{3}\", {4}, \"{5}\", \"{6}\", \"{7}\", {8}, {9}, {10}, {11}, {12}, {13}, {14})'\n".format(fname, events, proc, gen, rnd, LHEfile, HEPfile, beamType, ebeam1, ebeam2, int(always_d_mesons), int(extended_event_info), minpthard, maxpthard, debug_level))
             shell.communicate()
     else:

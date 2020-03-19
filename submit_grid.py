@@ -492,6 +492,10 @@ def main(UserConf, yamlFileName, Offline, GridUpdate, OldPowhegInit, PowhegStage
         LoadPackagesSeparately = config["grid_config"]["load_packages_separately"]
     else:
         LoadPackagesSeparately = False
+
+    # Always load packages separately.
+    LoadPackagesSeparately = True
+
     AliPhysicsVersion = GetAliPhysicsVersion(config["grid_config"]["aliphysics"])
     Events = config["numevents"]
     Jobs = config["numbjobs"]
