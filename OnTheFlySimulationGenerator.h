@@ -97,8 +97,7 @@ public:
 protected:
   void               AddJetQA(const char* file_name = "");
   void               AddJetTree(const char* file_name = "");
-  void               AddDJet(const char* file_name = "");
-  void               AddLcJet(const char* file_name = "");
+  void               AddHFJets(const char* file_name = "");
 
   void               CalculateCMSEnergy();
 

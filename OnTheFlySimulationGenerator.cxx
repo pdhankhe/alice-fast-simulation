@@ -182,8 +182,7 @@ void OnTheFlySimulationGenerator::PrepareAnalysisManager()
   AliEmcalMCTrackSelector* pMCTrackSel = AliEmcalMCTrackSelector::AddTaskMCTrackSelector("mcparticles",kFALSE,kFALSE,-1,kFALSE);
 
 //  if (fJetQA) AddJetQA();
-  if (fDMesonJets) AddDJet();
-  if (fLcJets) AddLcJet();
+  if (fDMesonJets || fLcJets) AddHFJets();
 
   /*
   if (fJetTree) {
@@ -250,7 +249,7 @@ void OnTheFlySimulationGenerator::AddJetQA(const char* file_name)
 }
 
 //________________________________________________________________________
-void OnTheFlySimulationGenerator::AddDJet(const char* file_name)
+void OnTheFlySimulationGenerator::AddHFJets(const char* file_name)
 {
   TString fname(file_name);
   TString old_file_name;
@@ -260,64 +259,9 @@ void OnTheFlySimulationGenerator::AddDJet(const char* file_name)
   }
 
   UInt_t rejectOrigin = 0;
+  Int_t iNTrees = Int_t(fDMesonJets) + Int_t(fLcJets);
 
-  AliAnalysisTaskHFJets* pDMesonJetsTask = AliAnalysisTaskHFJets::AddTaskHFJets("", "", "usedefault", 2, "D0");
-  pDMesonJetsTask->SetVzRange(-999,999);
-  pDMesonJetsTask->SetPtHardRange(fMinPtHard, fMaxPtHard);
-  if (fMinPtHard > -1 && fMaxPtHard > fMinPtHard) pDMesonJetsTask->SetMCFilter();
-  pDMesonJetsTask->SetJetPtFactor(4);
-  pDMesonJetsTask->SetIsPythia(kTRUE);
-  pDMesonJetsTask->SetNeedEmcalGeom(kFALSE);
-  pDMesonJetsTask->SetForceBeamType(AliAnalysisTaskEmcalLight::kpp);
-  pDMesonJetsTask->SetCentralityEstimation(AliAnalysisTaskEmcalLight::kNoCentrality);
-  if (fExtendedEventInfo) {
-    pDMesonJetsTask->SetOutputType(AliAnalysisTaskHFJets::kTreeExtendedOutput);
-  }
-  else {
-    pDMesonJetsTask->SetOutputType(AliAnalysisTaskHFJets::kTreeOutput);
-  }
-  pDMesonJetsTask->SetApplyKinematicCuts(kTRUE);
-  pDMesonJetsTask->SetRejectISR(fRejectISR);
-  AliAnalysisTaskHFJets::AnalysisEngine* eng = 0;
-  eng = pDMesonJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kD0toKpi, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kChargedJet, 0.4);
-  eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
-  eng->SetRejectedOriginMap(rejectOrigin);
-  eng->SetJetEtaRange(-0.5, 0.5);
-  eng->SetJetPtRange(0., 400.);
-//  eng = pDMesonJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kD0toKpi, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kChargedJet, 0.6);
-//  eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
-//  eng->SetRejectedOriginMap(rejectOrigin);
-//  eng = pDMesonJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kD0toKpi, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kFullJet, 0.4);
-//  eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
-//  eng->SetRejectedOriginMap(rejectOrigin);
-//  eng = pDMesonJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kDstartoKpipi, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kChargedJet, 0.4);
-//  eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
-//  eng->SetRejectedOriginMap(rejectOrigin);
-//  eng = pDMesonJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kDstartoKpipi, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kChargedJet, 0.6);
-//  eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
-//  eng->SetRejectedOriginMap(rejectOrigin);
-//  eng = pDMesonJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kDstartoKpipi, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kFullJet, 0.4);
-//  eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
-//  eng->SetRejectedOriginMap(rejectOrigin);
-
-  if (!fname.IsNull()) {
-    AliAnalysisManager::SetCommonFileName(old_file_name);
-  }
-}
-
-//________________________________________________________________________
-void OnTheFlySimulationGenerator::AddLcJet(const char* file_name)
-{
-  TString fname(file_name);
-  TString old_file_name;
-  if (!fname.IsNull()) {
-    old_file_name = AliAnalysisManager::GetCommonFileName();
-    AliAnalysisManager::SetCommonFileName(fname);
-  }
-
-  UInt_t rejectOrigin = 0;
-
-  AliAnalysisTaskHFJets* pHFJetsTask = AliAnalysisTaskHFJets::AddTaskHFJets("", "", "usedefault", 2, "Lc");
+  AliAnalysisTaskHFJets* pHFJetsTask = AliAnalysisTaskHFJets::AddTaskHFJets("", "", "usedefault", iNTrees);
   pHFJetsTask->SetVzRange(-999,999);
   pHFJetsTask->SetPtHardRange(fMinPtHard, fMaxPtHard);
   if (fMinPtHard > -1 && fMaxPtHard > fMinPtHard) pHFJetsTask->SetMCFilter();
@@ -335,12 +279,26 @@ void OnTheFlySimulationGenerator::AddLcJet(const char* file_name)
   pHFJetsTask->SetApplyKinematicCuts(kTRUE);
   pHFJetsTask->SetRejectISR(fRejectISR);
   AliAnalysisTaskHFJets::AnalysisEngine* eng = 0;
-  eng = pHFJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kLctopK0s, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kChargedJet, 0.4);
-//  eng = pHFJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kD0toKpi, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kChargedJet, 0.4);
-  eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
-  eng->SetRejectedOriginMap(rejectOrigin);
-  eng->SetJetEtaRange(-0.5, 0.5);
-  eng->SetJetPtRange(0., 400.);
+
+  Double_t dEtaJetMax = 0.5;
+  Double_t dPtJetMax = 400.;
+
+  if (fDMesonJets)
+  {
+    eng = pHFJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kD0toKpi, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kChargedJet, 0.4);
+    eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
+    eng->SetRejectedOriginMap(rejectOrigin);
+    eng->SetJetEtaRange(-dEtaJetMax, dEtaJetMax);
+    eng->SetJetPtRange(0., dPtJetMax);
+  }
+  if (fLcJets)
+  {
+    eng = pHFJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kLctopK0s, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kChargedJet, 0.4);
+    eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
+    eng->SetRejectedOriginMap(rejectOrigin);
+    eng->SetJetEtaRange(-dEtaJetMax, dEtaJetMax);
+    eng->SetJetPtRange(0., dPtJetMax);
+  }
 
   if (!fname.IsNull()) {
     AliAnalysisManager::SetCommonFileName(old_file_name);
