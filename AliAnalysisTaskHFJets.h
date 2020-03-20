@@ -166,9 +166,9 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
   /// information that can be easily passed to a function.
   class AliJetInfo {
   public:
-    AliJetInfo() : fMomentum(), fNConstituents(0), fNEF(0), fMaxChargedPt(0), fMaxNeutralPt(0), fArea(0), fCorrPt(0), fZg(-1), fRg(-1), fNSD(-1), fPtMother(-1), fK0(-1), fK1(-1), fK2(-1), fKT(-1) {}
+    AliJetInfo() : fMomentum(), fNConstituents(0), fNEF(0), fMaxChargedPt(0), fMaxNeutralPt(0), fArea(0), fCorrPt(0), fZg(0), fRg(0), fNSD(-1), fPtMother(-1), fK0(-0.004), fK1(-0.004), fK2(-0.004), fKT(-1) {}
     AliJetInfo(Double_t px, Double_t py, Double_t pz, Double_t E, Int_t nconst, Double_t nef, Double_t cpt, Double_t npt) :
-      fMomentum(px, py, pz, E), fNConstituents(nconst), fNEF(nef), fMaxChargedPt(cpt), fMaxNeutralPt(npt), fArea(0), fCorrPt(0), fZg(-1), fRg(-1), fNSD(-1), fPtMother(-1), fK0(-1), fK1(-1), fK2(-1), fKT(-1) {}
+      fMomentum(px, py, pz, E), fNConstituents(nconst), fNEF(nef), fMaxChargedPt(cpt), fMaxNeutralPt(npt), fArea(0), fCorrPt(0), fZg(0), fRg(0), fNSD(-1), fPtMother(-1), fK0(-0.004), fK1(-0.004), fK2(-0.004), fKT(-1) {}
 
     virtual ~AliJetInfo() {;}
 
@@ -262,7 +262,7 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
   /// information in a very compact data structure (55 bits)
   class AliJetInfoSummary {
   public:
-    AliJetInfoSummary() : fPt(0), fEta(0), fPhi(0), fR(-1), fZ(-1), fN(-1), fZg(-1), fRg(-1), fNSD(-1), fPtMother(-1), fK0(-1), fK1(-1), fK2(-1), fKT(-1) {;}
+    AliJetInfoSummary() : fPt(0), fEta(0), fPhi(0), fR(0), fZ(0), fN(0), fZg(0), fRg(0), fNSD(-1), fPtMother(-1), fK0(-0.004), fK1(-0.004), fK2(-0.004), fKT(-1) {;}
     AliJetInfoSummary(const AliDmesonJetInfo& source, std::string n);
     virtual ~AliJetInfoSummary() {}
 
@@ -270,34 +270,34 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
     virtual void Set(const AliDmesonJetInfo& source, std::string n);
     virtual void Set(const AliJetInfo& source);
 
-    /// Transverse momentum of the jet in GeV/c
+    /// Transverse momentum of the jet in GeV/c, precision 0.05
     Double32_t  fPt        ; //[0,409.6,13]
-    /// Eta of the jet
+    /// Eta of the jet, precision 0.004
     Double32_t  fEta       ; //[-2.048,2.048,10]
-    /// Phi of the jet
+    /// Phi of the jet, precision 0.006
     Double32_t  fPhi       ; //[0,2*pi,10]
-    /// Distance between D meson and jet axis
+    /// Distance between D meson and jet axis, precision 0.02
     Double32_t  fR         ; //[0,2.56,7]
-    /// Z of the D meson
+    /// Z of the D meson, precision 0.001
     Double32_t  fZ         ; //[0,1.024,10]
-    /// Number of jet constituents
+    /// Number of jet constituents, precision 1
     Double32_t  fN         ; //[0, 64, 6]
-    /// z_g
-    Double32_t  fZg        ;
-    /// R_g
-    Double32_t  fRg        ;
-    /// n_SD
-    Double32_t  fNSD       ;
-    /// pT of the SD mother subjet
-    Double32_t  fPtMother  ;
-    /// k_0
-    Double32_t  fK0        ;
-    /// k_1
-    Double32_t  fK1        ;
-    /// k_2
-    Double32_t  fK2        ;
-    /// k_T
-    Double32_t  fKT        ;
+    /// z_g, precision 0.001
+    Double32_t  fZg        ; //[0,1.024,10]
+    /// R_g, precision 0.001
+    Double32_t  fRg        ; //[0,1.024,10]
+    /// n_SD, precision 1
+    Double32_t  fNSD       ; //[-1, 63, 6]
+    /// pT of the SD mother subjet, precision 0.05
+    Double32_t  fPtMother  ; //[-1,408.6,13]
+    /// k_0, precision 0.001
+    Double32_t  fK0        ; //[-0.004,1.020,10]
+    /// k_1, precision 0.001
+    Double32_t  fK1        ; //[-0.004,1.020,10]
+    /// k_2, precision 0.001
+    Double32_t  fK2        ; //[-0.004,1.020,10]
+    /// k_T, precision 0.05
+    Double32_t  fKT        ; //[-1,101.4,11]
 
     /// \cond CLASSIMP
     ClassDef(AliJetInfoSummary, 6);
@@ -319,13 +319,13 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
     virtual void Set(const AliDmesonJetInfo& source, std::string n);
     virtual void Set(const AliJetInfo& source);
 
-    /// Transverse momentum of the jet in GeV/c after subtracting average background
+    /// Transverse momentum of the jet in GeV/c after subtracting average background, precision 0.05
     Double32_t  fCorrPt    ; //[-409.6,409.6,14]
 
-    /// Z of the D meson after subtracting average background
+    /// Z of the D meson after subtracting average background, precision 0.001
     Double32_t  fCorrZ     ; //[0,1.024,10]
 
-    /// Area of the jet
+    /// Area of the jet, precision 0.008
     Double32_t  fArea      ; //[0,2.048,8]
 
     /// \cond CLASSIMP
@@ -347,14 +347,14 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
     virtual void Reset();
     virtual void Set(const AliDmesonJetInfo& source);
 
-    /// Transverse momentum of the D meson in GeV/c
+    /// Transverse momentum of the D meson in GeV/c, precision 0.05
     Double32_t   fPt     ; //[0,204.8,12]
-    /// Eta of the D meson
+    /// Eta of the D meson, precision 0.004
     Double32_t   fEta    ; //[-2.048,2.048,10]
-    /// Phi of the D meson
+    /// Phi of the D meson, precision 0.006
     Double32_t   fPhi    ; //[0,2*pi,10]
-    /// Y of the D meson
-    Double32_t   fY      ;
+    /// Y of the D meson, precision 0.004
+    Double32_t   fY      ; //[-2.048,2.048,10]
 
     /// \cond CLASSIMP
     ClassDef(AliDmesonInfoSummary, 2);
@@ -375,9 +375,9 @@ class AliAnalysisTaskHFJets : public AliAnalysisTaskEmcalLight
     virtual void Reset();
     virtual void Set(const AliDmesonJetInfo& source);
 
-    /// Parton type
+    /// Parton type, precision 1
     Double32_t   fPartonType  ; //[0, 16, 4]
-    /// Transverse momentum of the parton
+    /// Transverse momentum of the parton, precision 0.05
     Double32_t   fPartonPt    ; //[0,819.2,14]
     /// Absolute PDG of the ancestor particle
     UShort_t     fAncestorPDG ;

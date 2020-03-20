@@ -214,13 +214,13 @@ void AliAnalysisTaskHFJets::AliDmesonJetInfo::Reset()
     jet.second.fMaxNeutralPt = 0;
     jet.second.fArea = 0;
     jet.second.fCorrPt = 0;
-    jet.second.fZg = -1;
-    jet.second.fRg = -1;
+    jet.second.fZg = 0;
+    jet.second.fRg = 0;
     jet.second.fNSD = -1;
     jet.second.fPtMother = -1;
-    jet.second.fK0 = -1;
-    jet.second.fK1 = -1;
-    jet.second.fK2 = -1;
+    jet.second.fK0 = -0.004;
+    jet.second.fK1 = -0.004;
+    jet.second.fK2 = -0.004;
     jet.second.fKT = -1;
   }
 }
@@ -390,16 +390,16 @@ AliAnalysisTaskHFJets::AliJetInfoSummary::AliJetInfoSummary(const AliDmesonJetIn
   fPt(0),
   fEta(0),
   fPhi(0),
-  fR(-1),
-  fZ(-1),
-  fN(-1),
-  fZg(-1),
-  fRg(-1),
+  fR(0),
+  fZ(0),
+  fN(0),
+  fZg(0),
+  fRg(0),
   fNSD(-1),
   fPtMother(-1),
-  fK0(-1),
-  fK1(-1),
-  fK2(-1),
+  fK0(-0.004),
+  fK1(-0.004),
+  fK2(-0.004),
   fKT(-1)
 {
   Set(source, n);
@@ -411,16 +411,16 @@ void AliAnalysisTaskHFJets::AliJetInfoSummary::Reset()
   fPt = 0;
   fEta = 0;
   fPhi = 0;
-  fR = -1;
-  fZ = -1;
-  fN = -1;
-  fZg = -1;
-  fRg = -1;
+  fR = 0;
+  fZ = 0;
+  fN = 0;
+  fZg = 0;
+  fRg = 0;
   fNSD = -1;
   fPtMother = -1;
-  fK0 = -1;
-  fK1 = -1;
-  fK2 = -1;
+  fK0 = -0.004;
+  fK1 = -0.004;
+  fK2 = -0.004;
   fKT = -1;
 }
 
@@ -447,8 +447,8 @@ void AliAnalysisTaskHFJets::AliJetInfoSummary::Set(const AliJetInfo& source)
   fPt = source.Pt();
   fEta = source.Eta();
   fPhi = source.Phi_0_2pi();
-  fR = -1;
-  fZ = -1;
+  fR = 0;
+  fZ = 0;
   fN = source.GetNConstituents();
   fZg = source.Zg();
   fRg = source.Rg();
@@ -2827,14 +2827,14 @@ Bool_t AliAnalysisTaskHFJets::AnalysisEngine::FindJet(AliAODRecoDecayHF2Prong* D
     if (isDmesonJet) {
       DmesonJet.fJets[jetDef.GetName()].fMomentum.SetPxPyPzE(jets_incl[ijet].px(), jets_incl[ijet].py(), jets_incl[ijet].pz(), jets_incl[ijet].E());
       DmesonJet.fJets[jetDef.GetName()].fNConstituents = nConst;
-      DmesonJet.fJets[jetDef.GetName()].fZg = -1.;
-      DmesonJet.fJets[jetDef.GetName()].fRg = -1.;
-      DmesonJet.fJets[jetDef.GetName()].fNSD = -1.;
-      DmesonJet.fJets[jetDef.GetName()].fPtMother = -1.;
-      DmesonJet.fJets[jetDef.GetName()].fK0 = -1.;
-      DmesonJet.fJets[jetDef.GetName()].fK1 = -1.;
-      DmesonJet.fJets[jetDef.GetName()].fK2 = -1.;
-      DmesonJet.fJets[jetDef.GetName()].fKT = -1.;
+      DmesonJet.fJets[jetDef.GetName()].fZg = 0;
+      DmesonJet.fJets[jetDef.GetName()].fRg = 0;
+      DmesonJet.fJets[jetDef.GetName()].fNSD = 0;
+      DmesonJet.fJets[jetDef.GetName()].fPtMother = 0;
+      DmesonJet.fJets[jetDef.GetName()].fK0 = 0;
+      DmesonJet.fJets[jetDef.GetName()].fK1 = 0;
+      DmesonJet.fJets[jetDef.GetName()].fK2 = 0;
+      DmesonJet.fJets[jetDef.GetName()].fKT = 0;
       DmesonJet.fJets[jetDef.GetName()].fMaxChargedPt = maxChPt;
       DmesonJet.fJets[jetDef.GetName()].fMaxNeutralPt = maxNePt;
       DmesonJet.fJets[jetDef.GetName()].fNEF = totalNeutralPt / jets_incl[ijet].pt();
@@ -2931,8 +2931,8 @@ void AliAnalysisTaskHFJets::AnalysisEngine::RunParticleLevelAnalysis()
       Float_t fSoftDropZCut = 0.1;
       Float_t fSoftDropBeta = 0.0;
       Float_t fMinSubJetPt = 0.0;
-      Float_t dZg = -1., dZgTmp = -1.;
-      Float_t dRg = -1., dRgTmp = -1.;
+      Float_t dZg = 0., dZgTmp = 0.;
+      Float_t dRg = 0., dRgTmp = 0.;
       Int_t iNSD = 0;
       Float_t dPtMother = 0.0, dPtMotherTmp = 0.0;
       Float_t dK0 = 0.0, dK0Tmp = 0.0;
