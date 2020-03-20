@@ -282,6 +282,8 @@ void OnTheFlySimulationGenerator::AddDJet(const char* file_name)
   eng = pDMesonJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kD0toKpi, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kChargedJet, 0.4);
   eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
   eng->SetRejectedOriginMap(rejectOrigin);
+  eng->SetJetEtaRange(-0.5, 0.5);
+  eng->SetJetPtRange(0., 400.);
 //  eng = pDMesonJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kD0toKpi, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kChargedJet, 0.6);
 //  eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
 //  eng->SetRejectedOriginMap(rejectOrigin);
@@ -337,6 +339,8 @@ void OnTheFlySimulationGenerator::AddLcJet(const char* file_name)
 //  eng = pHFJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kD0toKpi, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kChargedJet, 0.4);
   eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
   eng->SetRejectedOriginMap(rejectOrigin);
+  eng->SetJetEtaRange(-0.5, 0.5);
+  eng->SetJetPtRange(0., 400.);
 
   if (!fname.IsNull()) {
     AliAnalysisManager::SetCommonFileName(old_file_name);
