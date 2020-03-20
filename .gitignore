@@ -20,3 +20,8 @@ powheg_*.tar
 sim_*.log
 userConf.yaml
 README.html
+
+CMakeCache.txt
+CMakeFiles
+G__*
+cmake_install.cmake
