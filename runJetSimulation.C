@@ -302,7 +302,7 @@ void runJetSimulation(TString name, Int_t pythiaEvents, TString procStr, TString
   }
 
   OnTheFlySimulationGenerator* sim = new OnTheFlySimulationGenerator(trainName);
-  sim->EnableJetQA(kTRUE);
+  sim->EnableJetQA(kFALSE);
   sim->SetNumberOfEvents(pythiaEvents);
   sim->SetProcess(proc);
   sim->SetSpecialParticle(specialPart);

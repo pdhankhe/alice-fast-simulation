@@ -181,10 +181,10 @@ void OnTheFlySimulationGenerator::PrepareAnalysisManager()
 
   AliEmcalMCTrackSelector* pMCTrackSel = AliEmcalMCTrackSelector::AddTaskMCTrackSelector("mcparticles",kFALSE,kFALSE,-1,kFALSE);
 
-//  if (fJetQA) AddJetQA();
+  if (fJetQA) AddJetQA();
+
   if (fDMesonJets || fLcJets) AddHFJets();
 
-  /*
   if (fJetTree) {
     if (fDMesonJets || fLcJets) {
       TString fname(AliAnalysisManager::GetCommonFileName());
@@ -195,7 +195,6 @@ void OnTheFlySimulationGenerator::PrepareAnalysisManager()
       AddJetTree();
     }
   }
-  */
 }
 
 //________________________________________________________________________
