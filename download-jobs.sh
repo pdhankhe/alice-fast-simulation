@@ -65,7 +65,7 @@ then
         if [ $nsuccess -lt $nfiles ]
         then
             echo "Not enough files to start merging: $nsuccess/$nfiles"
-            echo "$(date +'%H:%M:%S') Downloading will restart in $pause s."
+            echo "Downloading will restart in $pause s (at $(date --date='+'$pause' sec' +'%H:%M:%S'))."
             sleep $pause
         fi
     done
