@@ -402,7 +402,7 @@ def SubmitProcessingJobs(TrainName, LocalPath, AlienPath, AliPhysicsVersion, Off
             print("\033[1;32;40mand run a test job locally:\033[0;0;0m")
             print("./%s %s --numevents 10 --batch-job grid\n" % (ExeFile, yamlFileName))
         for file in FilesToDelete: os.remove(file)
-    print "Done."
+    print("\033[0;0;0mDone.")
 
     subprocessCall(["ls", LocalDest])
 
