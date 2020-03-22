@@ -397,12 +397,12 @@ def SubmitProcessingJobs(TrainName, LocalPath, AlienPath, AliPhysicsVersion, Off
         if not Offline:
             subprocessCall(["alien_submit", "alien://{0}/{1}".format(AlienDest, JdlFile)])
         else:
-            print("\033[1;32;40mYou can go in the working directory now:\033[0;0;0m")
+            print("\033[1;32mYou can go in the working directory now:\033[0m")
             print("cd %s" % LocalDest)
-            print("\033[1;32;40mand run a test job locally:\033[0;0;0m")
+            print("\033[1;32mand run a test job locally:\033[0m")
             print("./%s %s --numevents 10 --batch-job grid\n" % (ExeFile, yamlFileName))
         for file in FilesToDelete: os.remove(file)
-    print("\033[0;0;0mDone.")
+    print("\033[0mDone.")
 
     subprocessCall(["ls", LocalDest])
 
