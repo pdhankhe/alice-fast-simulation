@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 
 import os
+# support both Python 2.7 and 3.6
+# https://python-future.org/compatible_idioms.html#raw-input
+try:
+    from builtins import input
+except ImportError:
+    from __builtin__ import input
 import yaml
 
 def LoadUserConfiguration(path):
@@ -14,8 +20,8 @@ def LoadUserConfiguration(path):
 
 def GenerateUserConfiguration(path):
     config = dict()
-    username = raw_input("Please enter your CERN user name: ")
-    local_path = raw_input("Please enter a local path that I can use as working directory: ")
+    username = input("Please enter your CERN user name: ")
+    local_path = input("Please enter a local path that I can use as working directory: ")
     config["username"] = username
     config["local_path"] = local_path
     with open(path, 'w') as f:

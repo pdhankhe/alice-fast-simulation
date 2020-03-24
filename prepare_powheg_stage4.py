@@ -17,14 +17,16 @@ def CopyFiles(TrainName, LocalPath):
     EssentialFilesToCopy = ["pwggrid-????.dat", "pwggridinfo-btl-xg?-????.dat", "pwgubound-????.dat"]
 
     for fpattern in EssentialFilesToCopy:
-        for file in glob.glob("{}/{}".format(Origin, fpattern)): shutil.copy(file, Dest)
+        for fil in glob.glob("{}/{}".format(Origin, fpattern)):
+            shutil.copy(fil, Dest)
 
     AdditionalFilesToCopy = ["Powheg_Stage_?_Job_????.log", "powheg_Stage_*.input", "pwg-????-btlgrid.top", "pwg-????-stat.dat"
                              "pwg-st?-????-stat.dat", "pwg-xg?-????-btlgrid.top", "pwgboundviolations-????.dat",
                              "pwgcounters-st?-????.dat"]
 
     for fpattern in AdditionalFilesToCopy:
-        for file in glob.glob("{}/{}".format(Origin, fpattern)): shutil.copy(file, DestAdd)
+        for fil in glob.glob("{}/{}".format(Origin, fpattern)):
+            shutil.copy(fil, DestAdd)
 
 
 def main(UserConf, yamlFileName, unixTS):

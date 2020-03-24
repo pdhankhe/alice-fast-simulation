@@ -13,16 +13,16 @@
 import os
 import subprocess
 import argparse
-import yaml
 import time
 import shutil
 import re
-import UserConfiguration
 import datetime
 import random
+import glob
+import yaml
+import UserConfiguration
 import GeneratePowhegInput
 import GenerateHerwigInput
-import glob
 
 def AlienDelete(fileName):
     if fileName.find("alien://") == -1:
@@ -99,22 +99,21 @@ def CopyFilesToTheGrid(Files, AlienDest, LocalDest, Offline, GridUpdate):
         subprocessCall(["alien_mkdir", "-p", "{0}/output".format(AlienDest)])
 
     if not os.path.isdir(LocalDest):
-        print "Creating directory " + LocalDest
+        print("Creating directory " + LocalDest)
         os.makedirs(LocalDest)
-    for file in Files:
+    for fil in Files:
         if not Offline:
-            fname = os.path.basename(file)
-            AlienCopy(file, "alien://{}/{}".format(AlienDest, fname), 3, GridUpdate)
-        shutil.copy(file, LocalDest)
-
+            fname = os.path.basename(fil)
+            AlienCopy(fil, "alien://{}/{}".format(AlienDest, fname), 3, GridUpdate)
+        shutil.copy(fil, LocalDest)
 
 def GenerateComments():
     branch = subprocessCheckOutput(["git", "rev-parse", "--abbrev-ref", "HEAD"])
-    hash = subprocessCheckOutput(["git", "rev-parse", "HEAD"])
+    git_hash = subprocessCheckOutput(["git", "rev-parse", "HEAD"])
     comments = "# This is the startup script \n\
 # alice-yale-hfjet \n\
-# Generated using branch {branch} ({hash}) \n\
-".format(branch=branch.strip('\n'), hash=hash.strip('\n'))
+# Generated using branch {branch} ({git_hash}) \n\
+".format(branch=branch.strip('\n'), git_hash=git_hash.strip('\n'))
     return comments
 
 # JDL variables \n\
@@ -136,7 +135,7 @@ Output = {{ \n\
 \"root_archive.zip:AnalysisResults*.root@disk=2\" \n\
 }}; \n\
 Arguments = \"{yamlFileName} --numevents {Events} --minpthard {MinPtHard} --maxpthard {MaxPtHard} --batch-job grid --job-number #alien_counter# --powheg-stage {PowhegStage}\"; \n\
-".format(yamlFileName=yamlFileName, MinPtHard=MinPtHard, MaxPtHard=MaxPtHard, comments=comments, executable=Exe, dest=AlienDest, Packages=Packages, Events=Events, TTL=TTL, PowhegStage=PowhegStage)
+".format(yamlFileName=yamlFileName, MinPtHard=MinPtHard, MaxPtHard=MaxPtHard, comments=comments, executable=Exe, dest=AlienDest, Events=Events, TTL=TTL, PowhegStage=PowhegStage)
 
     if Packages:
         jdlContent += "Packages = {{ \n\
@@ -198,13 +197,13 @@ ValidationCommand = \"{dest}/{validationScript}\"; \n\
     if len(FilesToCopy) > 0:
         jdlContent += "InputFile = {"
         start = True
-        for file in FilesToCopy:
+        for fil in FilesToCopy:
             if start:
                 jdlContent += "\n"
             else:
                 jdlContent += ", \n"
             start = False
-            jdlContent += "\"LF:{dest}/{f}\"".format(dest=AlienDest, f=file)
+            jdlContent += "\"LF:{dest}/{f}\"".format(dest=AlienDest, f=fil)
         jdlContent += "}; \n"
 
     return jdlContent
@@ -217,9 +216,10 @@ def DetermineMergingStage(AlienPath, TrainName):
     AlienOuputContent = []
     for p in AlienOuputContent_orig:
         i = p.rfind("/")
-        if i >= 0: p = p[i + 1:]
+        if i >= 0:
+            p = p[i + 1:]
         AlienOuputContent.append(p)
-    if not "output" in AlienOuputContent:
+    if "output" not in AlienOuputContent:
         print(AlienOuputContent)
         return -1
     regex = re.compile("stage_.")
@@ -259,7 +259,8 @@ def SubmitMergingJobs(TrainName, LocalPath, AlienPath, AliPhysicsVersion, Offlin
         AlienDest = "{0}/{1}/stage_{2}".format(AlienPath, TrainPtHardName, MergingStage)
         LocalDest = "{0}/{1}/stage_{2}".format(LocalPath, TrainPtHardName, MergingStage)
 
-        if AlienFileExists(AlienDest): AlienDeleteDir(AlienDest)
+        if AlienFileExists(AlienDest):
+            AlienDeleteDir(AlienDest)
 
         ValidationScript = "FastSim_validation.sh"
         ExeFile = "runFastSimMerging.py"
@@ -285,7 +286,7 @@ def SubmitMergingJobs(TrainName, LocalPath, AlienPath, AliPhysicsVersion, Offlin
             subprocessCall(["alien_submit", "alien://{0}/{1}".format(AlienDest, JdlFile)])
         os.remove(JdlFile)
         os.remove(XmlFile)
-    print "Done."
+    print("Done.")
 
     subprocessCall(["ls", LocalDest])
 
@@ -301,7 +302,7 @@ def SubmitProcessingJobs(TrainName, LocalPath, AlienPath, AliPhysicsVersion, Off
     FilesToCopy = [yamlFileName, "OnTheFlySimulationGenerator.h", #"OnTheFlySimulationGenerator.cxx",
                    "runJetSimulation.C", "start_simulation.C",
                    "lhapdf_utils.py",
-#                   "CMakeLists.txt", "AnalysisCodeLinkDef.h",
+                   #"CMakeLists.txt", "AnalysisCodeLinkDef.h",
                    "HepMC.tar",
                    "AliGenExtFile_dev.h", #"AliGenExtFile_dev.cxx",
                    "AliGenReaderHepMC_dev.h", #"AliGenReaderHepMC_dev.cxx",
@@ -315,7 +316,7 @@ def SubmitProcessingJobs(TrainName, LocalPath, AlienPath, AliPhysicsVersion, Off
                    "THepMCParser_dev.h", #"THepMCParser_dev.cxx",
                    "libAnalysisCode.so"]
 
-    Packages = ""
+    Packages = "\"VO_ALICE@Python-modules::1.0-51\",\n"
     if not LoadPackagesSeparately:
         Packages += "\"VO_ALICE@AliPhysics::{aliphysics}\",\n".format(aliphysics=AliPhysicsVersion)
 
@@ -333,13 +334,14 @@ def SubmitProcessingJobs(TrainName, LocalPath, AlienPath, AliPhysicsVersion, Off
                 EssentialFilesToCopy = ["pwggrid-????.dat", "pwggridinfo-btl-xg?-????.dat", "pwgubound-????.dat"]
 
                 for fpattern in EssentialFilesToCopy:
-                    for file in glob.glob("{}/{}".format(OldPowhegInit, fpattern)): FilesToCopy.append(file)
+                    for fil in glob.glob("{}/{}".format(OldPowhegInit, fpattern)):
+                        FilesToCopy.append(fil)
 
                 seed_file_name = "pwgseeds.dat"
                 FilesToDelete.append(seed_file_name)
                 FilesToCopy.append(seed_file_name)
                 with open(seed_file_name, "w") as seed_file:
-                    for iseed in range(0, Jobs + 1):
+                    for _ in range(0, Jobs + 1):
                         seed_file.write(str(random.randint(0, 1073741824)))
                         seed_file.write("\n")
             else:
@@ -401,12 +403,13 @@ def SubmitProcessingJobs(TrainName, LocalPath, AlienPath, AliPhysicsVersion, Off
             print("cd %s" % LocalDest)
             print("\033[1;32mand run a test job locally:\033[0m")
             print("./%s %s --numevents 10 --batch-job grid\n" % (ExeFile, yamlFileName))
-        for file in FilesToDelete: os.remove(file)
+        for fil in FilesToDelete:
+            os.remove(fil)
     print("\033[0mDone.")
 
     subprocessCall(["ls", LocalDest])
 
-def DownloadResults(TrainName, LocalPath, AlienPath, Gen, Proc, PtHardList, MergingStage):
+def DownloadResults(TrainName, LocalPath, AlienPath, PtHardList, MergingStage):
     if PtHardList and len(PtHardList) > 1:
         minPtHardBin = 0
         maxPtHardBin = len(PtHardList) - 1
@@ -418,8 +421,6 @@ def DownloadResults(TrainName, LocalPath, AlienPath, Gen, Proc, PtHardList, Merg
         if ptHardBin < 0:
             TrainPtHardName = TrainName
         else:
-            minPtHard = PtHardList[ptHardBin]
-            maxPtHard = PtHardList[ptHardBin + 1]
             TrainPtHardName = "{0}/{1}".format(TrainName, ptHardBin)
         print("Downloading results from train {0}".format(TrainPtHardName))
         if MergingStage < 0:
@@ -442,7 +443,8 @@ def DownloadResults(TrainName, LocalPath, AlienPath, Gen, Proc, PtHardList, Merg
         AlienOuputContent = subprocessCheckOutput(["alien_ls", AlienOutputPath]).splitlines()
         for SubDir in AlienOuputContent:
             i = SubDir.rfind("/")
-            if i >= 0: SubDir = SubDir[i + 1:]
+            if i >= 0:
+                SubDir = SubDir[i + 1:]
             SubDirDest = "{0}/{1}".format(LocalDest, SubDir)
             SubDirOrig = "{0}/{1}".format(AlienOutputPath, SubDir)
             if not os.path.isdir(SubDirDest):
@@ -450,7 +452,8 @@ def DownloadResults(TrainName, LocalPath, AlienPath, Gen, Proc, PtHardList, Merg
             FilesToDownload = subprocessCheckOutput(["alien_ls", "{0}/AnalysisResults*.root".format(SubDirOrig)]).splitlines()
             for FileName in FilesToDownload:
                 i = FileName.rfind("/")
-                if i >= 0: FileName = FileName[i + 1:]
+                if i >= 0:
+                    FileName = FileName[i + 1:]
                 FileDest = "{0}/{1}".format(SubDirDest, FileName)
                 if os.path.isfile(FileDest):
                     print("File {0} already exists, skipping...".format(FileDest))
@@ -484,7 +487,8 @@ def GetLastTrainName(AlienPath, Gen, Proc):
 def GetAliPhysicsVersion(ver):
     if ver == "_last_":
         now = datetime.datetime.now()
-        if now.hour < 18: now -= datetime.timedelta(days=1)
+        if now.hour < 18:
+            now -= datetime.timedelta(days=1)
         ver = now.strftime("vAN-%Y%m%d-1")
     return ver
 
@@ -523,23 +527,23 @@ def main(UserConf, yamlFileName, Offline, GridUpdate, OldPowhegInit, PowhegStage
         alirootPath = subprocess.check_output(["which", "aliroot"]).rstrip()
         alienPath = subprocess.check_output(["which", "alien-token-info"]).rstrip()
     except subprocess.CalledProcessError:
-        print "Environment is not configured correctly!"
+        print("Environment is not configured correctly!")
         exit()
 
-    print "Root: " + rootPath
-    print "AliRoot: " + alirootPath
-    print "Alien: " + alienPath
+    print("Root: " + rootPath)
+    print("AliRoot: " + alirootPath)
+    print("Alien: " + alienPath)
 
     try:
-        print "Token info disabled"
+        print("Token info disabled")
         # tokenInfo=subprocess.check_output(["alien-token-info"])
     except subprocess.CalledProcessError:
-        print "Alien token not available. Creating a token for you..."
+        print("Alien token not available. Creating a token for you...")
         try:
             # tokenInit=subprocess.check_output(["alien-token-init", UserConf["username"]], shell=True)
-            print "Token init disabled"
+            print("Token init disabled")
         except subprocess.CalledProcessError:
-            print "Error: could not create the token!"
+            print("Error: could not create the token!")
             exit()
 
     LocalPath = UserConf["local_path"]
@@ -563,7 +567,7 @@ def main(UserConf, yamlFileName, Offline, GridUpdate, OldPowhegInit, PowhegStage
                 exit(1)
         else:
             TrainName = "FastSim_{0}_{1}_{2}".format(Gen, Proc, Download)
-        DownloadResults(TrainName, LocalPath, AlienPath, Gen, Proc, PtHardList, MergingStage)
+        DownloadResults(TrainName, LocalPath, AlienPath, PtHardList, MergingStage)
     else:
         unixTS = int(time.time())
         print("The timestamp for this job is {0}. You will need it to submit merging jobs and download you final results.".format(unixTS))

@@ -48,7 +48,8 @@ def GenerateParallelPowhegInput(outputdir, powheg_stage, x_grid_iter, events, jo
             myfile.write("bornonly 1\n")
 
         myfile.write("storemintupb {0}\n".format(storemintupb))
-        if powheg_stage == 1: myfile.write("xgriditeration {}\n".format(x_grid_iter))
+        if powheg_stage == 1:
+            myfile.write("xgriditeration {}\n".format(x_grid_iter))
         myfile.write("lhans1 {0}\n".format(lhans))
         myfile.write("lhans2 {0}\n".format(lhans))
         myfile.write("ebeam1 {0}\n".format(ebeam1))
@@ -127,10 +128,7 @@ def main(yamlConfigFile, outputdir, events, powheg_stage, x_grid_iter=1):
     if sep >= 0:
         powheg_proc = powheg_proc[0:sep]
 
-    if proc.endswith("_lo"):
-        bornonly = True
-    else:
-        bornonly = False
+    bornonly = proc.endswith("_lo")
 
     # Optional parameters
     if "qmass" in config["powheg_config"]:

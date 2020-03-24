@@ -4,9 +4,9 @@ import subprocess
 import argparse
 
 
-def main(cmd, minjobid, maxjobid):
+def main(command, minjobid, maxjobid):
     for jobid in range(minjobid, maxjobid + 1):
-        subprocess.call([cmd, str(jobid)])
+        subprocess.call([command, str(jobid)])
 
 
 if __name__ == '__main__':

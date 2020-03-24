@@ -11,7 +11,6 @@ import random
 import glob
 import math
 import yaml
-from time import sleep
 import lhapdf_utils
 
 ALIENV = "/cvmfs/alice.cern.ch/bin/alienv"
@@ -20,9 +19,9 @@ def alienv_exec(cmd, pkg):
     if isinstance(cmd, list):
         cmd = " ".join(cmd)
     cmd = "'" + cmd + "'"
-    cmd = [ ALIENV, "setenv", pkg, "-c", cmd ]
-    print("ALIENV> executing %s" % " ".join(cmd))
-    cmd = " ".join(cmd)
+    cmd_list = [ALIENV, "setenv", pkg, "-c", cmd]
+    print("ALIENV> executing %s" % " ".join(cmd_list))
+    cmd = " ".join(cmd_list)
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     out, err = proc.communicate()
     return proc.returncode, out, err
@@ -30,12 +29,12 @@ def alienv_exec(cmd, pkg):
 def GetAliPhysicsVersion(ver):
     if ver == "_last_":
         now = datetime.datetime.now()
-        if now.hour < 18: now -= datetime.timedelta(days=1)
+        if now.hour < 18:
+            now -= datetime.timedelta(days=1)
         ver = now.strftime("vAN-%Y%m%d-1")
     return ver
 
-class PowhegResult:
-
+class PowhegResult: # pylint: disable=too-few-public-methods
     def __init__(self, events_generated, lhe_file, log_file):
         self.lhe_file = lhe_file
         self.log_file = log_file
@@ -50,8 +49,7 @@ def GetNumberOfPowhegEvents(lhefile):
         nevents = 0
     return nevents
 
-class HerwigResult:
-
+class HerwigResult: # pylint: disable=too-few-public-methods
     def __init__(self, events_generated, hep_file, log_file):
         self.hep_file = hep_file
         self.log_file = log_file
@@ -138,6 +136,7 @@ def RunPowhegSingle(powhegExe, load_packages_separately):
 
     with open("powheg.input", "a") as myfile:
         rnd = random.randint(0, 1073741824)  # 2^30
+        rnd = 0
         myfile.write("iseed {0}\n".format(rnd))
 
     with open("powheg.input", 'r') as fin:
@@ -225,6 +224,7 @@ def RunHerwig(nevents, pdfid, load_packages_separately):
     print("Running HERWIG simulation!")
 
     rnd = random.randint(0, 1073741824)  # 2^30
+    rnd = 0
 
     with open("herwig.in", 'r') as fin:
         herwig_input = fin.read().splitlines()
@@ -240,7 +240,7 @@ def RunHerwig(nevents, pdfid, load_packages_separately):
         print("Starting a separate shell to load the Herwig package...")
         with open("herwig_stdout.log", "w") as myfile:
             cmd = "which Herwig"
-            rc,out,err = alienv_exec(cmd, herwig_pkg)
+            rc, out, err = alienv_exec(cmd, herwig_pkg)
             myfile.write("Command '{}' exited with return code '{}'\n".format(cmd, rc))
             myfile.write(out)
             myfile.write("\n")
@@ -249,7 +249,7 @@ def RunHerwig(nevents, pdfid, load_packages_separately):
 
             # Verify that PDF is installed
             cmd = "lhapdf list --installed"
-            rc,out,err = alienv_exec(cmd, herwig_pkg)
+            rc, out, err = alienv_exec(cmd, herwig_pkg)
             myfile.write("Command '{}' exited with return code '{}'\n".format(cmd, rc))
             myfile.write(out)
             myfile.write("\n")
@@ -353,7 +353,7 @@ def main(events, powheg_stage, job_number, yamlConfigFile, batch_job, input_even
     dname = os.path.dirname(abspath)
     os.chdir(dname)
 
-    f = open(args.config, 'r')
+    f = open(yamlConfigFile, 'r')
     config = yaml.load(f)
     f.close()
 
@@ -438,6 +438,7 @@ def main(events, powheg_stage, job_number, yamlConfigFile, batch_job, input_even
             events = max_events
 
     rnd = random.randint(0, 1073741824)  # 2^30
+    rnd = 0
     print("Setting seed to {0}".format(rnd))
 
     if load_packages_separately:
@@ -465,13 +466,18 @@ def main(events, powheg_stage, job_number, yamlConfigFile, batch_job, input_even
             work_dir = "output/{}".format(fname)
             os.makedirs(work_dir)
             shutil.copy("libAnalysisCode.so", work_dir)
-            if os.path.isfile("AnalysisCode.rootmap"): shutil.copy("AnalysisCode.rootmap", work_dir)
+            if os.path.isfile("AnalysisCode.rootmap"):
+                shutil.copy("AnalysisCode.rootmap", work_dir)
             shutil.copy("runJetSimulation.C", work_dir)
             shutil.copy("start_simulation.C", work_dir)
-            for hdr_file in glob.glob(r'./*.h'): shutil.copy(hdr_file, work_dir)
-            for pcm_file in glob.glob(r'./*.pcm'): shutil.copy(pcm_file, work_dir)
-            if "powheg" in gen: LHEfile = "../../{}".format(LHEfile)
-            if "herwig" in gen: HEPfile = "../../{}".format(HEPfile)
+            for hdr_file in glob.glob(r'./*.h'):
+                shutil.copy(hdr_file, work_dir)
+            for pcm_file in glob.glob(r'./*.pcm'):
+                shutil.copy(pcm_file, work_dir)
+            if "powheg" in gen:
+                LHEfile = "../../{}".format(LHEfile)
+            if "herwig" in gen:
+                HEPfile = "../../{}".format(HEPfile)
             os.chdir(work_dir)
 
         print("Running simulation...")

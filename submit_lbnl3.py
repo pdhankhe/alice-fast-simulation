@@ -23,8 +23,8 @@ def subprocessCheckOutput(cmd):
     return subprocess.check_output(cmd, universal_newlines=True)
 
 def CopyFilesToTheWorkingDir(Files, LocalDest):
-    for file in Files:
-        shutil.copy(file, LocalDest)
+    for fil in Files:
+        shutil.copy(fil, LocalDest)
 
 def SubmitParallel(LocalDest, ExeFile, Events, Jobs, yamlFileName):
     for ijob in range(0, Jobs):
@@ -69,20 +69,20 @@ def SubmitParallelPowheg(LocalDest, ExeFile, Events, Jobs, yamlFileName, PowhegS
             myfile.write("#PBS -j oe\n")
             myfile.write("source /home/salvatore/load_alice.sh\n")
             myfile.write("{LocalDest}/{ExeFile} {LocalDest}/{yamlFileName} --numevents {Events} --job-number {ijob} --powheg-stage {PowhegStage} --batch-job lbnl3\n".format(LocalDest=LocalDest, ExeFile=ExeFile, yamlFileName=yamlFileName, Events=Events, ijob=ijob, PowhegStage=PowhegStage))
-        os.chmod(RunJobFileName, 0755)
+        os.chmod(RunJobFileName, 0o755)
         output = subprocessCheckOutput(["qsub", RunJobFileName])
         print(output)
 
 def GenerateComments():
     branch = subprocessCheckOutput(["git", "rev-parse", "--abbrev-ref", "HEAD"])
-    hash = subprocessCheckOutput(["git", "rev-parse", "HEAD"])
+    git_hash = subprocessCheckOutput(["git", "rev-parse", "HEAD"])
     comments = "# This is the startup script \n\
 # alice-yale-hfjet \n\
-# Generated using branch {branch} ({hash}) \n\
-".format(branch=branch.strip('\n'), hash=hash.strip('\n'))
+# Generated using branch {branch} ({git_hash}) \n\
+".format(branch=branch.strip('\n'), git_hash=git_hash.strip('\n'))
     return comments
 
-def SubmitProcessingJobs(TrainName, LocalPath, Events, Jobs, Gen, Proc, yamlFileName, copy_files, PowhegStage, XGridIter):
+def SubmitProcessingJobs(TrainName, LocalPath, Events, Jobs, Gen, yamlFileName, copy_files, PowhegStage, XGridIter):
     print("Submitting processing jobs for train {0}".format(TrainName))
 
     ExeFile = "runFastSim.py"
@@ -102,22 +102,22 @@ def SubmitProcessingJobs(TrainName, LocalPath, Events, Jobs, Gen, Proc, yamlFile
                 nseeds = Jobs
             else:
                 nseeds = 20
-            for iseed in range(1, nseeds + 1):
+            for _ in range(1, nseeds + 1):
                 rnd = random.randint(0, 1073741824)  # 2^30
                 myfile.write("{}\n".format(rnd))
 
         FilesToCopy = [yamlFileName, "OnTheFlySimulationGenerator.cxx", "OnTheFlySimulationGenerator.h",
-                        "runJetSimulation.C", "start_simulation.C",
-                        "lhapdf_utils.py",
-                        "powheg_pythia8_conf.cmnd",
-                        "Makefile", "HepMC.tar",
-                        "AliGenExtFile_dev.h", "AliGenExtFile_dev.cxx",
-                        "AliGenReaderHepMC_dev.h", "AliGenReaderHepMC_dev.cxx",
-                        "AliGenEvtGen_dev.h", "AliGenEvtGen_dev.cxx",
-                        "AliGenPythia_dev.h", "AliGenPythia_dev.cxx",
-                        "AliPythia6_dev.h", "AliPythia6_dev.cxx",
-                        "AliPythia8_dev.h", "AliPythia8_dev.cxx",
-                        "AliPythiaBase_dev.h", "AliPythiaBase_dev.cxx"]
+                       "runJetSimulation.C", "start_simulation.C",
+                       "lhapdf_utils.py",
+                       "powheg_pythia8_conf.cmnd",
+                       "Makefile", "HepMC.tar",
+                       "AliGenExtFile_dev.h", "AliGenExtFile_dev.cxx",
+                       "AliGenReaderHepMC_dev.h", "AliGenReaderHepMC_dev.cxx",
+                       "AliGenEvtGen_dev.h", "AliGenEvtGen_dev.cxx",
+                       "AliGenPythia_dev.h", "AliGenPythia_dev.cxx",
+                       "AliPythia6_dev.h", "AliPythia6_dev.cxx",
+                       "AliPythia8_dev.h", "AliPythia8_dev.cxx",
+                       "AliPythiaBase_dev.h", "AliPythiaBase_dev.cxx"]
 
         FilesToCopy.extend([ExeFile])
 
@@ -134,7 +134,7 @@ def SubmitProcessingJobs(TrainName, LocalPath, Events, Jobs, Gen, Proc, yamlFile
     else:
         SubmitParallel(LocalDest, ExeFile, Events, Jobs, yamlFileName)
 
-    print "Done."
+    print("Done.")
 
 def main(UserConf, yamlFileName, continue_powheg, powheg_stage, XGridIter):
     f = open(yamlFileName, 'r')
@@ -151,12 +151,12 @@ def main(UserConf, yamlFileName, continue_powheg, powheg_stage, XGridIter):
         alirootPath = subprocess.check_output(["which", "aliroot"]).rstrip()
         qsubPath = subprocess.check_output(["which", "qsub"]).rstrip()
     except subprocess.CalledProcessError:
-        print "Environment is not configured correctly!"
+        print("Environment is not configured correctly!")
         exit()
 
-    print "Root: " + rootPath
-    print "AliRoot: " + alirootPath
-    print "qsub: " + qsubPath
+    print("Root: " + rootPath)
+    print("AliRoot: " + alirootPath)
+    print("qsub: " + qsubPath)
 
     LocalPath = UserConf["local_path"]
 
@@ -171,7 +171,7 @@ def main(UserConf, yamlFileName, continue_powheg, powheg_stage, XGridIter):
         copy_files = False
         print("Continue job with timestamp {0}.".format(unixTS))
     TrainName = "FastSim_{0}_{1}_{2}".format(Gen, Proc, unixTS)
-    SubmitProcessingJobs(TrainName, LocalPath, Events, Jobs, Gen, Proc, yamlFileName, copy_files, powheg_stage, XGridIter)
+    SubmitProcessingJobs(TrainName, LocalPath, Events, Jobs, Gen, yamlFileName, copy_files, powheg_stage, XGridIter)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Local final merging for LEGO train results.')

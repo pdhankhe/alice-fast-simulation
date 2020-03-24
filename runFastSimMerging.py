@@ -15,12 +15,12 @@ def main(trainName, xmlFile):
         alirootPath = subprocess.check_output(["which", "aliroot"]).rstrip()
         alienPath = subprocess.check_output(["which", "alien-token-info"]).rstrip()
     except subprocess.CalledProcessError:
-        print "Environment is not configured correctly!"
+        print("Environment is not configured correctly!")
         exit()
 
-    print "Root: " + rootPath
-    print "AliRoot: " + alirootPath
-    print "Alien: " + alienPath
+    print("Root: " + rootPath)
+    print("AliRoot: " + alirootPath)
+    print("Alien: " + alienPath)
 
     print("Running merging of {0} on: {1}".format(trainName, " ".join(platform.uname())))
 
