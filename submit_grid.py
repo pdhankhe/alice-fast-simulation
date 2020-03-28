@@ -402,7 +402,7 @@ def SubmitProcessingJobs(TrainName, LocalPath, AlienPath, AliPhysicsVersion, Off
             print("\033[1;32mYou can go in the working directory now:\033[0m")
             print("cd %s" % LocalDest)
             print("\033[1;32mand run a test job locally:\033[0m")
-            print("./%s %s --numevents 10 --batch-job grid\n" % (ExeFile, yamlFileName))
+            print("./%s %s --numevents 100 --batch-job grid\n" % (ExeFile, yamlFileName))
         for fil in FilesToDelete:
             os.remove(fil)
     print("\033[0mDone.")
