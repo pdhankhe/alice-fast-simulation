@@ -178,6 +178,8 @@ Output = {{ \n\
 Arguments = \"{trainName} --xml wn.xml\"; \n\
 Packages = {{ \n\
 \"VO_ALICE@AliPhysics::{aliphysics}\", \n\
+\"VO_ALICE@Python-modules::1.0-12\" \n\
+#\"VO_ALICE@Python-modules::1.0-51\" \n\
 }}; \n\
 # JDL variables \n\
 JDLVariables = \n\
@@ -316,7 +318,8 @@ def SubmitProcessingJobs(TrainName, LocalPath, AlienPath, AliPhysicsVersion, Off
                    "THepMCParser_dev.h", #"THepMCParser_dev.cxx",
                    "libAnalysisCode.so"]
 
-    Packages = "\"VO_ALICE@Python-modules::1.0-51\",\n"
+    Packages = "\"VO_ALICE@Python-modules::1.0-12\",\n"
+    #Packages = "\"VO_ALICE@Python-modules::1.0-51\",\n"
     if not LoadPackagesSeparately:
         Packages += "\"VO_ALICE@AliPhysics::{aliphysics}\",\n".format(aliphysics=AliPhysicsVersion)
 
