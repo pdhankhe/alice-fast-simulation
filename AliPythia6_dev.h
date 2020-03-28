@@ -25,6 +25,7 @@ public:
   // Pythia initialisation for selected processes
   virtual void ProcInit(ProcessMy_t process, Float_t energy, Int_t strucfunc, Int_t tune);
 
+  virtual void  SetSeed(UInt_t seed);
   virtual void  GenerateEvent();
   virtual Int_t GetNumberOfParticles() { return GetN(); }
   virtual void  SetNumberOfParticles(Int_t i) { SetN(i); }
@@ -76,7 +77,7 @@ private:
   AliPythia6_dev(const AliPythia6_dev& pythia); // not implemented
   AliPythia6_dev & operator=(const AliPythia6_dev & rhs); // not implemented
 
-  ClassDef(AliPythia6_dev, 1) //ALICE UI to PYTHIA
+  ClassDef(AliPythia6_dev, 2) //ALICE UI to PYTHIA
 };
 
 #endif

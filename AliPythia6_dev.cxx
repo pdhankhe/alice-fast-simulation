@@ -358,3 +358,10 @@ Int_t AliPythia6_dev::GetParticles(TClonesArray *particles)
   }
   return n;
 }
+
+void AliPythia6_dev::SetSeed(UInt_t seed)
+{
+  AliPythiaRndm::GetPythiaRandom()->SetSeed(seed);
+  SetMRPY(1, (seed % 900000000) + 1);
+  SetMRPY(2, 0);
+}
