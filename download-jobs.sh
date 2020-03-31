@@ -2,9 +2,12 @@
 
 # Download and merge job output files.
 
+# Use the third parameter to require or exclude a disk storage element (SE)
+# Use \! in front of the SE name to exclude it.
+
 if [ -z "$1" ] || [ -z "$2" ] || ! [ "$2" -eq "$2" ]
 then
-    echo "Usage: $0 <job directory> <number of files to download>"
+    echo "Usage: $0 <job directory> <number of files to download> [storage element]"
     exit 1
 fi
 
@@ -12,6 +15,12 @@ if [ -z "$ALIPHYSICS_RELEASE" ]
 then
     echo "Error: AliPhysics not loaded."
     exit 1
+fi
+
+SE=""
+if [ ! -z "$3" ]
+then
+    SE="$3"
 fi
 
 jobfullname=$1 # name of the job directory (e.g. FastSim_powheg+pythia6+evtgen_beauty_1581559114)
@@ -58,7 +67,12 @@ then
             fi
             echo "Downloading"
             mkdir -p $(dirname $target_file)
-            alien_cp -m alien://${file} .${file}
+            path_alien="alien://${file}"
+            if [ ! -z "$SE" ]
+            then
+                path_alien="${path_alien}@${SE}"
+            fi
+            alien_cp -m ${path_alien} .${file}
         done
 
         nsuccess=$(find $dirlocal -type f -name $filename | wc -w)
