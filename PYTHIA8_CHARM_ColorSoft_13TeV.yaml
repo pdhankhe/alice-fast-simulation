@@ -1,6 +1,6 @@
 name: PYTHIA8_CHARM_ColorSoft_13TeV
-numevents: 10000
-numbjobs: 2000
+numevents: 50000
+numbjobs: 400
 gen: pythia8
 proc: charm_ColorSoft
 lhans: 11000
