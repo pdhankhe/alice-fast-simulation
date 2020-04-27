@@ -6,5 +6,10 @@ then
     ext=$2
 fi
 
-root -b -q 'summary.C("'$1'",'$ext')'
+dir=$(dirname $0)
+macro="summary.C"
+
+root -b -q ''${dir}/${macro}'("'$1'",'$ext')'
+
+exit 0
 

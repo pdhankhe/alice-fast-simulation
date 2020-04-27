@@ -22,6 +22,9 @@ then
     exit 1
 fi
 
+dir=$(dirname $0)
+macro="ConvertTrees.C"
+
 for file in $(cat "${file_list}")
 do
     if [ ! -f "$file" ]
@@ -29,7 +32,7 @@ do
       echo "Error: File ${file} does not exist!"
       exit -1
     fi
-    aliroot -b -q 'ConvertTrees.C("'${file}'")'
+    aliroot -b -q ''${dir}/${macro}'("'${file}'")'
 done
 
 exit 0

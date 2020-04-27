@@ -34,27 +34,7 @@ void ConvertTrees(TString sPathFileInput)
   TList* listOut = 0;
 
   TProfile* prXSection = 0;
-  /*
-  Double_t dPtHadron = 0;
-  Double_t dEtaHadron = 0;
-  Double_t dPhiHadron = 0;
-  Double_t dYHadron = 0;
-  Int_t    iPDGParton = 0;
-  Double_t dPtJet = 0;
-  Double_t dEtaJet = 0;
-  Double_t dPhiJet = 0;
-  Double_t dR = 0;
-  Double_t dZJet = 0;
-  Int_t    iNConst = 0;
-  Double_t dZgJet = 0;
-  Double_t dRgJet = 0;
-  Int_t    iNSD = 0;
-  Double_t dPtMother = 0;
-  Double_t dK0 = 0;
-  Double_t dK1 = 0;
-  Double_t dK2 = 0;
-  Double_t dKT = 0;
-  */
+
   /// Transverse momentum of the D meson in GeV/c, precision 0.05
   Double32_t   dPtHadron     ; //[0,204.8,12]
   /// Eta of the D meson, precision 0.004
@@ -83,8 +63,8 @@ void ConvertTrees(TString sPathFileInput)
   Double32_t  dRgJet        ; //[0,1.024,10]
   /// n_SD, precision 1
   Double32_t  iNSD       ; //[-1, 63, 6]
-  /// pT of the SD mother subjet, precision 0.05
-  Double32_t  dPtMother  ; //[-1,408.6,13]
+  /// pT of the SD splitting, precision 0.05
+  Double32_t  fPt_splitting  ; //[-1,408.6,13]
   /// k_0, precision 0.001
   Double32_t  dK0        ; //[-0.004,1.020,10]
   /// k_1, precision 0.001
@@ -93,6 +73,22 @@ void ConvertTrees(TString sPathFileInput)
   Double32_t  dK2        ; //[-0.004,1.020,10]
   /// k_T, precision 0.05
   Double32_t  dKT        ; //[-1,101.4,11]
+  /// z k_0, precision 0.001
+  Double32_t  fZK0       ; //[-0.004,1.020,10]
+  /// z k_1, precision 0.001
+  Double32_t  fZK1       ; //[-0.004,1.020,10]
+  /// z k_2, precision 0.001
+  Double32_t  fZK2       ; //[-0.004,1.020,10]
+  /// z k_T, precision 0.001
+  Double32_t  fZKT       ; //[-0.004,1.020,10]
+  /// R k_0, precision 0.001
+  Double32_t  fRK0       ; //[-0.004,1.020,10]
+  /// R k_1, precision 0.001
+  Double32_t  fRK1       ; //[-0.004,1.020,10]
+  /// R k_2, precision 0.001
+  Double32_t  fRK2       ; //[-0.004,1.020,10]
+  /// R k_T, precision 0.001
+  Double32_t  fRKT       ; //[-0.004,1.020,10]
 
   fileIn = new TFile(sPathFileInput.Data());
   if(fileIn->IsZombie())
@@ -156,11 +152,19 @@ void ConvertTrees(TString sPathFileInput)
     treeOut[iH]->Branch("zg_jet", &dZgJet);
     treeOut[iH]->Branch("rg_jet", &dRgJet);
     treeOut[iH]->Branch("nsd_jet", &iNSD);
-    treeOut[iH]->Branch("Pt_mother_jet", &dPtMother);
+    treeOut[iH]->Branch("Pt_splitting_jet", &fPt_splitting);
     treeOut[iH]->Branch("k0_jet", &dK0);
     treeOut[iH]->Branch("k1_jet", &dK1);
     treeOut[iH]->Branch("k2_jet", &dK2);
     treeOut[iH]->Branch("kT_jet", &dKT);
+    treeOut[iH]->Branch("zk0_jet", &fZK0);
+    treeOut[iH]->Branch("zk1_jet", &fZK1);
+    treeOut[iH]->Branch("zk2_jet", &fZK2);
+    treeOut[iH]->Branch("zkT_jet", &fZKT);
+    treeOut[iH]->Branch("rk0_jet", &fRK0);
+    treeOut[iH]->Branch("rk1_jet", &fRK1);
+    treeOut[iH]->Branch("rk2_jet", &fRK2);
+    treeOut[iH]->Branch("rkT_jet", &fRKT);
 
     Int_t iNEntries = treeIn[iH]->GetEntries();
     printf("Starting the %s loop for %d entries.\n", sLabelsHadron[iH].Data(), iNEntries);
@@ -182,11 +186,19 @@ void ConvertTrees(TString sPathFileInput)
       dZgJet = HFJet->fZg;
       dRgJet = HFJet->fRg;
       iNSD = HFJet->fNSD;
-      dPtMother = HFJet->fPtMother;
+      fPt_splitting = HFJet->fPt_splitting;
       dK0 = HFJet->fK0;
       dK1 = HFJet->fK1;
       dK2 = HFJet->fK2;
       dKT = HFJet->fKT;
+      fZK0 = HFJet->fZK0;
+      fZK1 = HFJet->fZK1;
+      fZK2 = HFJet->fZK2;
+      fZKT = HFJet->fZKT;
+      fRK0 = HFJet->fRK0;
+      fRK1 = HFJet->fRK1;
+      fRK2 = HFJet->fRK2;
+      fRKT = HFJet->fRKT;
       treeOut[iH]->Fill();
     }
     printf("End of the %s loop.\n", sLabelsHadron[iH].Data());

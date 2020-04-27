@@ -166,9 +166,56 @@ public:
   /// information that can be easily passed to a function.
   class AliJetInfo {
   public:
-    AliJetInfo() : fMomentum(), fNConstituents(0), fNEF(0), fMaxChargedPt(0), fMaxNeutralPt(0), fArea(0), fCorrPt(0), fZg(0), fRg(0), fNSD(-1), fPtMother(-1), fK0(-0.004), fK1(-0.004), fK2(-0.004), fKT(-1) {}
+    AliJetInfo() :
+      fMomentum(),
+      fNConstituents(0),
+      fNEF(0),
+      fMaxChargedPt(0),
+      fMaxNeutralPt(0),
+      fArea(0),
+      fCorrPt(0),
+      fZg(-0.004),
+      fRg(-0.004),
+      fNSD(-1),
+      fPt_splitting(-1),
+      fK0(-0.004),
+      fK1(-0.004),
+      fK2(-0.004),
+      fKT(-1),
+      fZK0(-0.004),
+      fZK1(-0.004),
+      fZK2(-0.004),
+      fZKT(-0.004),
+      fRK0(-0.004),
+      fRK1(-0.004),
+      fRK2(-0.004),
+      fRKT(-0.004)
+    {}
     AliJetInfo(Double_t px, Double_t py, Double_t pz, Double_t E, Int_t nconst, Double_t nef, Double_t cpt, Double_t npt) :
-      fMomentum(px, py, pz, E), fNConstituents(nconst), fNEF(nef), fMaxChargedPt(cpt), fMaxNeutralPt(npt), fArea(0), fCorrPt(0), fZg(0), fRg(0), fNSD(-1), fPtMother(-1), fK0(-0.004), fK1(-0.004), fK2(-0.004), fKT(-1) {}
+      fMomentum(px, py, pz, E),
+      fNConstituents(nconst),
+      fNEF(nef),
+      fMaxChargedPt(cpt),
+      fMaxNeutralPt(npt),
+      fArea(0),
+      fCorrPt(0),
+      fZg(-0.004),
+      fRg(-0.004),
+      fNSD(-1),
+      fPt_splitting(-1),
+      fK0(-0.004),
+      fK1(-0.004),
+      fK2(-0.004),
+      fKT(-1),
+      fZK0(-0.004),
+      fZK1(-0.004),
+      fZK2(-0.004),
+      fZKT(-0.004),
+      fRK0(-0.004),
+      fRK1(-0.004),
+      fRK2(-0.004),
+      fRKT(-0.004)
+    {}
 
     virtual ~AliJetInfo() {;}
 
@@ -180,11 +227,19 @@ public:
     Double_t Zg()        const { return fZg                  ; }
     Double_t Rg()        const { return fRg                  ; }
     Int_t NSD()          const { return fNSD                 ; }
-    Double_t PtMother()  const { return fPtMother            ; }
+    Double_t Pt_splitting()  const { return fPt_splitting    ; }
     Double_t K0()        const { return fK0                  ; }
     Double_t K1()        const { return fK1                  ; }
     Double_t K2()        const { return fK2                  ; }
     Double_t KT()        const { return fKT                  ; }
+    Double_t ZK0()       const { return fZK0                 ; }
+    Double_t ZK1()       const { return fZK1                 ; }
+    Double_t ZK2()       const { return fZK2                 ; }
+    Double_t ZKT()       const { return fZKT                 ; }
+    Double_t RK0()       const { return fRK0                 ; }
+    Double_t RK1()       const { return fRK1                 ; }
+    Double_t RK2()       const { return fRK2                 ; }
+    Double_t RKT()       const { return fRKT                 ; }
     Int_t GetNConstituents() const { return  fNConstituents; }
     Double_t GetDistance(const AliJetInfo& jet, Double_t& deta, Double_t& dphi) const;
     Double_t GetDistance(const AliJetInfo& jet) const;
@@ -199,14 +254,22 @@ public:
     Double_t          fZg                   ; ///< substructure z_g
     Double_t          fRg                   ; ///< substructure R_g
     Int_t             fNSD                  ; ///< substructure n_SD
-    Double_t          fPtMother             ; ///< substructure pT of the SD mother subjet
+    Double_t          fPt_splitting         ; ///< substructure pT of the SD splitting
     Double_t          fK0                   ; ///< substructure k_0
     Double_t          fK1                   ; ///< substructure k_1
     Double_t          fK2                   ; ///< substructure k_2
     Double_t          fKT                   ; ///< substructure k_T
+    Double_t          fZK0                  ; ///< substructure z k_0
+    Double_t          fZK1                  ; ///< substructure z k_1
+    Double_t          fZK2                  ; ///< substructure z k_2
+    Double_t          fZKT                  ; ///< substructure z k_T
+    Double_t          fRK0                  ; ///< substructure R k_0
+    Double_t          fRK1                  ; ///< substructure R k_1
+    Double_t          fRK2                  ; ///< substructure R k_2
+    Double_t          fRKT                  ; ///< substructure R k_T
 
     /// \cond CLASSIMP
-    ClassDef(AliJetInfo, 4);
+    ClassDef(AliJetInfo, 5);
     /// \endcond
   };
 
@@ -261,7 +324,30 @@ public:
   /// information in a very compact data structure (55 bits)
   class AliJetInfoSummary {
   public:
-    AliJetInfoSummary() : fPt(0), fEta(0), fPhi(0), fR(0), fZ(0), fN(0), fZg(0), fRg(0), fNSD(-1), fPtMother(-1), fK0(-0.004), fK1(-0.004), fK2(-0.004), fKT(-1) {;}
+    AliJetInfoSummary() :
+      fPt(0),
+      fEta(0),
+      fPhi(0),
+      fR(0),
+      fZ(0),
+      fN(0),
+      fZg(-0.004),
+      fRg(-0.004),
+      fNSD(-1),
+      fPt_splitting(-1),
+      fK0(-0.004),
+      fK1(-0.004),
+      fK2(-0.004),
+      fKT(-1),
+      fZK0(-0.004),
+      fZK1(-0.004),
+      fZK2(-0.004),
+      fZKT(-0.004),
+      fRK0(-0.004),
+      fRK1(-0.004),
+      fRK2(-0.004),
+      fRKT(-0.004)
+    {;}
     AliJetInfoSummary(const AliDmesonJetInfo& source, std::string n);
     virtual ~AliJetInfoSummary() {}
 
@@ -282,13 +368,13 @@ public:
     /// Number of jet constituents, precision 1
     Double32_t  fN         ; //[0, 64, 6]
     /// z_g, precision 0.001
-    Double32_t  fZg        ; //[0,1.024,10]
+    Double32_t  fZg        ; //[-0.004,1.020,10]
     /// R_g, precision 0.001
-    Double32_t  fRg        ; //[0,1.024,10]
+    Double32_t  fRg        ; //[-0.004,1.020,10]
     /// n_SD, precision 1
     Double32_t  fNSD       ; //[-1, 63, 6]
-    /// pT of the SD mother subjet, precision 0.05
-    Double32_t  fPtMother  ; //[-1,408.6,13]
+    /// pT of the SD splitting, precision 0.05
+    Double32_t  fPt_splitting  ; //[-1,408.6,13]
     /// k_0, precision 0.001
     Double32_t  fK0        ; //[-0.004,1.020,10]
     /// k_1, precision 0.001
@@ -297,9 +383,25 @@ public:
     Double32_t  fK2        ; //[-0.004,1.020,10]
     /// k_T, precision 0.05
     Double32_t  fKT        ; //[-1,101.4,11]
+    /// z k_0, precision 0.001
+    Double32_t  fZK0       ; //[-0.004,1.020,10]
+    /// z k_1, precision 0.001
+    Double32_t  fZK1       ; //[-0.004,1.020,10]
+    /// z k_2, precision 0.001
+    Double32_t  fZK2       ; //[-0.004,1.020,10]
+    /// z k_T, precision 0.001
+    Double32_t  fZKT       ; //[-0.004,1.020,10]
+    /// R k_0, precision 0.001
+    Double32_t  fRK0       ; //[-0.004,1.020,10]
+    /// R k_1, precision 0.001
+    Double32_t  fRK1       ; //[-0.004,1.020,10]
+    /// R k_2, precision 0.001
+    Double32_t  fRK2       ; //[-0.004,1.020,10]
+    /// R k_T, precision 0.001
+    Double32_t  fRKT       ; //[-0.004,1.020,10]
 
     /// \cond CLASSIMP
-    ClassDef(AliJetInfoSummary, 6);
+    ClassDef(AliJetInfoSummary, 7);
     /// \endcond
   };
 

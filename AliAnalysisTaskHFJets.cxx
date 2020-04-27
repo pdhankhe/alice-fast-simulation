@@ -214,14 +214,22 @@ void AliAnalysisTaskHFJets::AliDmesonJetInfo::Reset()
     jet.second.fMaxNeutralPt = 0;
     jet.second.fArea = 0;
     jet.second.fCorrPt = 0;
-    jet.second.fZg = 0;
-    jet.second.fRg = 0;
+    jet.second.fZg = -0.004;
+    jet.second.fRg = -0.004;
     jet.second.fNSD = -1;
-    jet.second.fPtMother = -1;
+    jet.second.fPt_splitting = -1;
     jet.second.fK0 = -0.004;
     jet.second.fK1 = -0.004;
     jet.second.fK2 = -0.004;
     jet.second.fKT = -1;
+    jet.second.fZK0 = -0.004;
+    jet.second.fZK1 = -0.004;
+    jet.second.fZK2 = -0.004;
+    jet.second.fZKT = -0.004;
+    jet.second.fRK0 = -0.004;
+    jet.second.fRK1 = -0.004;
+    jet.second.fRK2 = -0.004;
+    jet.second.fRKT = -0.004;
   }
 }
 
@@ -393,14 +401,22 @@ AliAnalysisTaskHFJets::AliJetInfoSummary::AliJetInfoSummary(const AliDmesonJetIn
   fR(0),
   fZ(0),
   fN(0),
-  fZg(0),
-  fRg(0),
+  fZg(-0.004),
+  fRg(-0.004),
   fNSD(-1),
-  fPtMother(-1),
+  fPt_splitting(-1),
   fK0(-0.004),
   fK1(-0.004),
   fK2(-0.004),
-  fKT(-1)
+  fKT(-1),
+  fZK0(-0.004),
+  fZK1(-0.004),
+  fZK2(-0.004),
+  fZKT(-0.004),
+  fRK0(-0.004),
+  fRK1(-0.004),
+  fRK2(-0.004),
+  fRKT(-0.004)
 {
   Set(source, n);
 }
@@ -414,14 +430,22 @@ void AliAnalysisTaskHFJets::AliJetInfoSummary::Reset()
   fR = 0;
   fZ = 0;
   fN = 0;
-  fZg = 0;
-  fRg = 0;
+  fZg = -0.004;
+  fRg = -0.004;
   fNSD = -1;
-  fPtMother = -1;
+  fPt_splitting = -1;
   fK0 = -0.004;
   fK1 = -0.004;
   fK2 = -0.004;
   fKT = -1;
+  fZK0 = -0.004;
+  fZK1 = -0.004;
+  fZK2 = -0.004;
+  fZKT = -0.004;
+  fRK0 = -0.004;
+  fRK1 = -0.004;
+  fRK2 = -0.004;
+  fRKT = -0.004;
 }
 
 /// Set the current object using an instance of AliDmesonJetInfo as its source
@@ -453,11 +477,19 @@ void AliAnalysisTaskHFJets::AliJetInfoSummary::Set(const AliJetInfo& source)
   fZg = source.Zg();
   fRg = source.Rg();
   fNSD = source.NSD();
-  fPtMother = source.PtMother();
+  fPt_splitting = source.Pt_splitting();
   fK0 = source.K0();
   fK1 = source.K1();
   fK2 = source.K2();
   fKT = source.KT();
+  fZK0 = source.ZK0();
+  fZK1 = source.ZK1();
+  fZK2 = source.ZK2();
+  fZKT = source.ZKT();
+  fRK0 = source.RK0();
+  fRK1 = source.RK1();
+  fRK2 = source.RK2();
+  fRKT = source.RKT();
 }
 
 // Definitions of class AliAnalysisTaskHFJets::AliJetInfoPbPbSummary
@@ -2832,11 +2864,19 @@ Bool_t AliAnalysisTaskHFJets::AnalysisEngine::FindJet(AliAODRecoDecayHF2Prong* D
       DmesonJet.fJets[jetDef.GetName()].fZg = 0;
       DmesonJet.fJets[jetDef.GetName()].fRg = 0;
       DmesonJet.fJets[jetDef.GetName()].fNSD = 0;
-      DmesonJet.fJets[jetDef.GetName()].fPtMother = 0;
+      DmesonJet.fJets[jetDef.GetName()].fPt_splitting = 0;
       DmesonJet.fJets[jetDef.GetName()].fK0 = 0;
       DmesonJet.fJets[jetDef.GetName()].fK1 = 0;
       DmesonJet.fJets[jetDef.GetName()].fK2 = 0;
       DmesonJet.fJets[jetDef.GetName()].fKT = 0;
+      DmesonJet.fJets[jetDef.GetName()].fZK0 = 0;
+      DmesonJet.fJets[jetDef.GetName()].fZK1 = 0;
+      DmesonJet.fJets[jetDef.GetName()].fZK2 = 0;
+      DmesonJet.fJets[jetDef.GetName()].fZKT = 0;
+      DmesonJet.fJets[jetDef.GetName()].fRK0 = 0;
+      DmesonJet.fJets[jetDef.GetName()].fRK1 = 0;
+      DmesonJet.fJets[jetDef.GetName()].fRK2 = 0;
+      DmesonJet.fJets[jetDef.GetName()].fRKT = 0;
       DmesonJet.fJets[jetDef.GetName()].fMaxChargedPt = maxChPt;
       DmesonJet.fJets[jetDef.GetName()].fMaxNeutralPt = maxNePt;
       DmesonJet.fJets[jetDef.GetName()].fNEF = totalNeutralPt / jets_incl[ijet].pt();
@@ -2929,6 +2969,7 @@ void AliAnalysisTaskHFJets::AnalysisEngine::RunParticleLevelAnalysis()
       // calculate substructure variables
       // from PWGHF/treeHF/AliHFJetFinder.cxx AliHFJetFinder::SetJetSubstructureVariables
       Bool_t bSoftdropped = kFALSE;
+      Float_t Pt_jet = 0.0;
       Float_t fSubJetRadius = 2.5 * jetDef.fRadius;
       Float_t fSoftDropZCut = 0.1;
       Float_t fSoftDropBeta = 0.0;
@@ -2936,11 +2977,11 @@ void AliAnalysisTaskHFJets::AnalysisEngine::RunParticleLevelAnalysis()
       Float_t dZg = 0., dZgTmp = 0.;
       Float_t dRg = 0., dRgTmp = 0.;
       Int_t iNSD = 0;
-      Float_t dPtMother = 0.0, dPtMotherTmp = 0.0;
-      Float_t dK0 = 0.0, dK0Tmp = 0.0;
-      Float_t dK1 = 0.0, dK1Tmp = 0.0;
-      Float_t dK2 = 0.0, dK2Tmp = 0.0;
-      Float_t dKT = 0.0, dKTTmp = 0.0;
+      Float_t dPt_splitting = 0.0, dPt_splittingTmp = 0.0;
+      Float_t dK0 = 0.0, dK0Tmp = 0.0, dZK0 = 0.0, dRK0 = 0.0;
+      Float_t dK1 = 0.0, dK1Tmp = 0.0, dZK1 = 0.0, dRK1 = 0.0;
+      Float_t dK2 = 0.0, dK2Tmp = 0.0, dZK2 = 0.0, dRK2 = 0.0;
+      Float_t dKT = 0.0, dKTTmp = 0.0, dZKT = 0.0, dRKT = 0.0;
       fastjet::JetDefinition subJet_definition(fastjet::cambridge_algorithm, fSubJetRadius, fastjet::E_scheme, fastjet::Best);
 
       fastjet::ClusterSequence cluster_sequence(jet.constituents(), subJet_definition);
@@ -2949,33 +2990,50 @@ void AliAnalysisTaskHFJets::AnalysisEngine::RunParticleLevelAnalysis()
       fastjet::PseudoJet daughter_jet = reclustered_jet[0];
       fastjet::PseudoJet parent_subjet_1;
       fastjet::PseudoJet parent_subjet_2;
+      Pt_jet = daughter_jet.perp();
 
       while(daughter_jet.has_parents(parent_subjet_1, parent_subjet_2)) {
         if(parent_subjet_1.perp() < parent_subjet_2.perp())
           std::swap(parent_subjet_1, parent_subjet_2);
-        dZgTmp = parent_subjet_2.perp() / (parent_subjet_1.perp() + parent_subjet_2.perp());
+        dPt_splittingTmp = parent_subjet_1.perp() + parent_subjet_2.perp();
+        dZgTmp = parent_subjet_2.perp() / dPt_splittingTmp;
         dRgTmp = parent_subjet_1.delta_R(parent_subjet_2);
-        dPtMotherTmp = daughter_jet.perp();
 
         if(dZgTmp >= fSoftDropZCut * TMath::Power(dRgTmp / jetDef.fRadius, fSoftDropBeta)) {
-          if(!bSoftdropped)
-          {
+          if(!bSoftdropped) {
             dZg = dZgTmp;
             dRg = dRgTmp;
-            dPtMother = dPtMotherTmp;
+            dPt_splitting = dPt_splittingTmp;
             bSoftdropped = kTRUE;
           }
           iNSD++;
         }
-        dK0Tmp = dZgTmp * (1. - dZgTmp) * TMath::Power(dRgTmp / jetDef.fRadius, 0.1);
-        dK1Tmp = dZgTmp * (1. - dZgTmp) * TMath::Power(dRgTmp / jetDef.fRadius, 1.);
-        dK2Tmp = dZgTmp * (1. - dZgTmp) * TMath::Power(dRgTmp / jetDef.fRadius, 2.);
-        dKTTmp = dZgTmp * dPtMotherTmp * TMath::Sin(dRgTmp);
-        dK0 = TMath::Max(dK0, dK0Tmp);
-        dK1 = TMath::Max(dK1, dK1Tmp);
-        dK2 = TMath::Max(dK2, dK2Tmp);
-        dKT = TMath::Max(dKT, dKTTmp);
-
+        if(Pt_jet > 0.0) {
+          dK0Tmp = (1.0 / Pt_jet) * dZgTmp * (1 - dZgTmp) * dPt_splittingTmp * TMath::Power(dRgTmp / jetDef.fRadius, 0.1);
+          dK1Tmp = (1.0 / Pt_jet) * dZgTmp * (1 - dZgTmp) * dPt_splittingTmp * TMath::Power(dRgTmp / jetDef.fRadius, 1);
+          dK2Tmp = (1.0 / Pt_jet) * dZgTmp * (1 - dZgTmp) * dPt_splittingTmp * TMath::Power(dRgTmp / jetDef.fRadius, 2);
+          dKTTmp = dZgTmp * dPt_splittingTmp * TMath::Sin(dRgTmp);
+          if(dK0Tmp > dK0) {
+            dK0 = dK0Tmp;
+            dZK0 = dZgTmp;
+            dRK0 = dRgTmp;
+          }
+          if(dK1Tmp > dK1) {
+            dK1 = dK1Tmp;
+            dZK1 = dZgTmp;
+            dRK1 = dRgTmp;
+          }
+          if(dK2Tmp > dK2) {
+            dK2 = dK2Tmp;
+            dZK2 = dZgTmp;
+            dRK2 = dRgTmp;
+          }
+          if(dKTTmp > dKT) {
+            dKT = dKTTmp;
+            dZKT = dZgTmp;
+            dRKT = dRgTmp;
+          }
+        }
         daughter_jet = parent_subjet_1;
       }
 
@@ -3028,16 +3086,27 @@ void AliAnalysisTaskHFJets::AnalysisEngine::RunParticleLevelAnalysis()
 
           (*dMesonJetIt).second.fJets[jetDef.GetName()].fMomentum.SetPxPyPzE(jet.px(), jet.py(), jet.pz(), jet.E());
           (*dMesonJetIt).second.fJets[jetDef.GetName()].fNConstituents = jet.constituents().size();
-          (*dMesonJetIt).second.fJets[jetDef.GetName()].fZg = dZg;
-          (*dMesonJetIt).second.fJets[jetDef.GetName()].fRg = dRg;
-          if(jet.constituents().size() > 1)  // keep the default values for single-track jets
+          if(iNSD > 0) // keep the default values if no Soft Drop
+          {
+            (*dMesonJetIt).second.fJets[jetDef.GetName()].fZg = dZg;
+            (*dMesonJetIt).second.fJets[jetDef.GetName()].fRg = dRg;
+          }
+          if(jet.constituents().size() > 1)  // keep the default values for single-constituent jets
           {
             (*dMesonJetIt).second.fJets[jetDef.GetName()].fNSD = iNSD;
-            (*dMesonJetIt).second.fJets[jetDef.GetName()].fPtMother = dPtMother;
+            (*dMesonJetIt).second.fJets[jetDef.GetName()].fPt_splitting = dPt_splitting;
             (*dMesonJetIt).second.fJets[jetDef.GetName()].fK0 = dK0;
             (*dMesonJetIt).second.fJets[jetDef.GetName()].fK1 = dK1;
             (*dMesonJetIt).second.fJets[jetDef.GetName()].fK2 = dK2;
             (*dMesonJetIt).second.fJets[jetDef.GetName()].fKT = dKT;
+            (*dMesonJetIt).second.fJets[jetDef.GetName()].fZK0 = dZK0;
+            (*dMesonJetIt).second.fJets[jetDef.GetName()].fZK1 = dZK1;
+            (*dMesonJetIt).second.fJets[jetDef.GetName()].fZK2 = dZK2;
+            (*dMesonJetIt).second.fJets[jetDef.GetName()].fZKT = dZKT;
+            (*dMesonJetIt).second.fJets[jetDef.GetName()].fRK0 = dRK0;
+            (*dMesonJetIt).second.fJets[jetDef.GetName()].fRK1 = dRK1;
+            (*dMesonJetIt).second.fJets[jetDef.GetName()].fRK2 = dRK2;
+            (*dMesonJetIt).second.fJets[jetDef.GetName()].fRKT = dRKT;
           }
           (*dMesonJetIt).second.fJets[jetDef.GetName()].fArea = jet.area();
           (*dMesonJetIt).second.fJets[jetDef.GetName()].fCorrPt = (*dMesonJetIt).second.fJets[jetDef.GetName()].fMomentum.Pt() - jet.area() * rho;
