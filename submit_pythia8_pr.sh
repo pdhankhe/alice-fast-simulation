@@ -15,7 +15,7 @@ for var in ${list[@]}; do
         case $yn in
             [Yy] ) echo "Submitting"; ./submit_grid.py ${var}.yaml; break;;
             [Nn] ) echo "Skipping"; break;;
-            * ) echo "Please answer yes or no.";;
+            * ) echo "Please answer y or n.";;
         esac
     done
 done

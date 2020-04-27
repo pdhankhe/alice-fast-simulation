@@ -17,11 +17,11 @@ for var in ${list[@]}; do
     #read -p "Press [ENTER] to continue..." -s
     #./submit_grid.py ${var}.yaml
     while true; do
-        read yn
+        read -p "Answer: " yn
         case $yn in
             [Yy] ) echo "Submitting"; ./submit_grid.py ${var}.yaml; break;;
             [Nn] ) echo "Skipping"; break;;
-            * ) echo "Please answer yes or no.";;
+            * ) echo "Please answer y or n.";;
         esac
     done
 done
