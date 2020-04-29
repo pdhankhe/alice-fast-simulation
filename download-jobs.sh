@@ -7,7 +7,7 @@
 
 if [ -z "$1" ] || [ -z "$2" ] || ! [ "$2" -eq "$2" ]
 then
-    echo "Usage: $0 <job directory> <number of files to download> [storage element]"
+    echo "Usage: $0 <job name> <number of files to download> [storage element]"
     exit 1
 fi
 
@@ -74,6 +74,7 @@ then
             fi
             alien_cp -m ${path_alien} .${file}
         done
+        rm -f $inputlist
 
         nsuccess=$(find $dirlocal -type f -name $filename | wc -w)
         if [ $nsuccess -lt $nfiles ]
@@ -87,7 +88,8 @@ fi
 
 nsuccess=$(find $dirlocal -type f -name $filename | wc -w)
 echo "Merging $nsuccess output files."
-hadd -f9 -O $filename_merged $(find $dirlocal -type f -name $filename)
+time hadd -f3 -O -j $(nproc) $filename_merged $(find $dirlocal -type f -name $filename)
+du -sh $filename_merged
 
 exit 0
 

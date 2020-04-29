@@ -4,16 +4,16 @@
 
 if [ -z "$1" ]
 then
-    echo "Usage: $0 <text file containing the list of input files>"
-    exit -1
+    echo "Usage: $0 <text file containing the list of job names>"
+    exit 1
 fi
 
-file_list="$(readlink -f "$1")"
+job_list="$(readlink -f "$1")"
 
-if [ ! -f "$file_list" ]
+if [ ! -f "$job_list" ]
 then
-  echo "Error: File ${file_list} does not exist!"
-  exit -1
+  echo "Error: File ${job_list} does not exist!"
+  exit 1
 fi
 
 if [ -z "$ALIPHYSICS_RELEASE" ]
@@ -25,14 +25,17 @@ fi
 dir=$(dirname $0)
 macro="ConvertTrees.C"
 
-for file in $(cat "${file_list}")
+for jobfullname in $(cat "${job_list}")
 do
-    if [ ! -f "$file" ]
+    filename_merged="AnalysisResults_${jobfullname}.root"
+    filename_tree=${filename_merged/AnalysisResults_FastSim_/trees_}
+    if [ ! -f "$filename_merged" ]
     then
-      echo "Error: File ${file} does not exist!"
-      exit -1
+      echo "Error: File ${filename_merged} does not exist!"
+      exit 1
     fi
-    aliroot -b -q ''${dir}/${macro}'("'${file}'")'
+    logfile="stdouterr_${jobfullname}_convert.txt"
+    aliroot -b -q ''${dir}/${macro}'("'${filename_merged}'")' > $logfile 2>&1 && du -sh $filename_tree >> $logfile 2>&1 &
 done
 
 exit 0

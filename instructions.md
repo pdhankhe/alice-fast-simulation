@@ -11,11 +11,7 @@ git checkout taskHFjets
 ## Load the necessary packages
 
 ~~~~bash
-alienv enter VO_ALICE@AliPhysics::vAN-20181026-1
-~~~~
-In case you want to run POWHEG without loading packages separately (disabled now):
-~~~~bash
-alienv enter VO_ALICE@AliPhysics::vAN-20181026-1,VO_ALICE@POWHEG::r3178-alice1-1
+/cvmfs/alice.cern.ch/bin/alienv enter VO_ALICE@AliPhysics::vAN-20181026-1
 ~~~~
 
 ## Build the library
