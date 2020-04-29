@@ -8,7 +8,7 @@ beam_type: pp
 ebeam1: 3500
 ebeam2: 3500
 grid_config:
-  ttl: 10000
+  ttl: 15000
   max_files_per_job: 20
   aliphysics: vAN-20181026-1
 
