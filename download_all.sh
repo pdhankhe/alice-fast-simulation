@@ -24,7 +24,7 @@ then
 fi
 
 dir=$(dirname $0)
-script="download-jobs.sh"
+script="download_job.sh"
 
 for jobfullname in $(cat $job_list)
 do
