@@ -136,7 +136,7 @@ def RunPowhegSingle(powhegExe, load_packages_separately):
 
     with open("powheg.input", "a") as myfile:
         rnd = random.randint(0, 1073741824)  # 2^30
-        rnd = 1
+        #rnd = 1
         myfile.write("iseed {0}\n".format(rnd))
 
     with open("powheg.input", 'r') as fin:
@@ -224,7 +224,7 @@ def RunHerwig(nevents, pdfid, load_packages_separately):
     print("Running HERWIG simulation!")
 
     rnd = random.randint(0, 1073741824)  # 2^30
-    rnd = 1
+    #rnd = 1
 
     with open("herwig.in", 'r') as fin:
         herwig_input = fin.read().splitlines()
@@ -438,7 +438,7 @@ def main(events, powheg_stage, job_number, yamlConfigFile, batch_job, input_even
             events = max_events
 
     rnd = random.randint(0, 1073741824)  # 2^30
-    rnd = 1
+    #rnd = 1
     print("Setting seed to {0}".format(rnd))
 
     if load_packages_separately:
