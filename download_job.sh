@@ -72,7 +72,7 @@ then
             then
                 path_alien="${path_alien}@${SE}"
             fi
-            alien_cp -m ${path_alien} .${file}
+            alien_cp ${path_alien} .${file}
         done
         rm -f $inputlist
 
