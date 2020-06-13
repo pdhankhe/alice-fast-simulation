@@ -72,7 +72,7 @@ then
             then
                 path_alien="${path_alien}@${SE}"
             fi
-            alien_cp ${path_alien} .${file}
+            alien_cp -f -cksum ${path_alien} ${target_file}
         done
         rm -f $inputlist
 
