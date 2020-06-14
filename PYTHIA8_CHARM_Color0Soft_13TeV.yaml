@@ -1,12 +1,12 @@
-name: PYTHIA8_CHARM_ColorHard_7TeV
-numevents: 10000
-numbjobs: 2000
+name: PYTHIA8_CHARM_Color0Soft_13TeV
+numevents: 50000
+numbjobs: 400
 gen: pythia8
-proc: charm_ColorHard
+proc: charm_Color0Soft
 lhans: 11000
 beam_type: pp
-ebeam1: 3500
-ebeam2: 3500
+ebeam1: 6500
+ebeam2: 6500
 grid_config:
   ttl: 15000
   max_files_per_job: 20

@@ -2,8 +2,12 @@
 
 list=( \
 PYTHIA8_CHARM_13TeV \
-#PYTHIA8_CHARM_ColorSoft_13TeV \
-#PYTHIA8_CHARM_ColorHard_13TeV \
+PYTHIA8_CHARM_Color0Soft_13TeV \
+PYTHIA8_CHARM_Color0Hard_13TeV \
+PYTHIA8_CHARM_Color2Soft_13TeV \
+PYTHIA8_CHARM_Color2Hard_13TeV \
+PYTHIA8_CHARM_Color3Soft_13TeV \
+PYTHIA8_CHARM_Color3Hard_13TeV \
 )
 
 #for var in ${list[@]}; do

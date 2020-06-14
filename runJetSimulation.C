@@ -207,12 +207,28 @@ void runJetSimulation(TString name, Int_t pythiaEvents, TString procStr, TString
       proc = kPyBeauty;
       specialPart = OnTheFlySimulationGenerator::kbbbar;
     }
-    else if(procStr == "charm_ColorHard" ) {
-      proc = kPyCharmColorHard;
+    else if(procStr == "charm_Color0Hard" ) {
+      proc = kPyCharmColor0Hard;
       specialPart = OnTheFlySimulationGenerator::kccbar;
     }
-    else if(procStr == "charm_ColorSoft" ) {
-      proc = kPyCharmColorSoft;
+    else if(procStr == "charm_Color2Hard" ) {
+      proc = kPyCharmColor2Hard;
+      specialPart = OnTheFlySimulationGenerator::kccbar;
+    }
+    else if(procStr == "charm_Color3Hard" ) {
+      proc = kPyCharmColor3Hard;
+      specialPart = OnTheFlySimulationGenerator::kccbar;
+    }
+    else if(procStr == "charm_Color0Soft" ) {
+      proc = kPyCharmColor0Soft;
+      specialPart = OnTheFlySimulationGenerator::kccbar;
+    }
+    else if(procStr == "charm_Color2Soft" ) {
+      proc = kPyCharmColor2Soft;
+      specialPart = OnTheFlySimulationGenerator::kccbar;
+    }
+    else if(procStr == "charm_Color3Soft" ) {
+      proc = kPyCharmColor3Soft;
       specialPart = OnTheFlySimulationGenerator::kccbar;
     }
     else {

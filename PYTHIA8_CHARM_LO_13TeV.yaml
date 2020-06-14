@@ -1,12 +1,12 @@
-name: PYTHIA8_CHARM_LO_7TeV
+name: PYTHIA8_CHARM_LO_13TeV
 numevents: 50000
 numbjobs: 400
 gen: pythia8
 proc: charm_lo
 lhans: 11000
 beam_type: pp
-ebeam1: 3500
-ebeam2: 3500
+ebeam1: 6500
+ebeam2: 6500
 grid_config:
   ttl: 7200
   max_files_per_job: 20

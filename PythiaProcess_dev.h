@@ -3,7 +3,7 @@
 
 typedef enum
 {
-    kPyCharm, kPyBeauty, kPyCharmColorHard, kPyCharmColorSoft, kPyCharmUnforced, kPyBeautyUnforced,
+    kPyCharm, kPyBeauty, kPyCharmColor0Hard, kPyCharmColor0Soft, kPyCharmColor2Hard, kPyCharmColor2Soft, kPyCharmColor3Hard, kPyCharmColor3Soft, kPyCharmUnforced, kPyBeautyUnforced,
     kPyJpsi, kPyJpsiChi, kPyMb, kPyMbWithDirectPhoton, kPyMbNonDiffr, kPyJets, kPyDirectGamma,
     kPyCharmPbPbMNR, kPyD0PbPbMNR, kPyDPlusPbPbMNR, kPyDPlusStrangePbPbMNR, kPyBeautyPbPbMNR,
     kPyCharmpPbMNR, kPyD0pPbMNR, kPyDPluspPbMNR, kPyDPlusStrangepPbMNR, kPyBeautypPbMNR,

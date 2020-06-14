@@ -1,13 +1,14 @@
-name: PYTHIA8_CHARM_LO_7TeV
-numevents: 50000
-numbjobs: 400
+name: PYTHIA8_CHARM_Color0Soft_7TeV
+numevents: 10000
+numbjobs: 2000
 gen: pythia8
-proc: charm_lo
+proc: charm_Color0Soft
 lhans: 11000
 beam_type: pp
 ebeam1: 3500
 ebeam2: 3500
 grid_config:
-  ttl: 7200
+  ttl: 15000
   max_files_per_job: 20
   aliphysics: vAN-20181026-1
+
