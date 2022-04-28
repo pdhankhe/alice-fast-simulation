@@ -30,7 +30,7 @@ void testload()
   gSystem->Load("libpythia6_4_28.so");
 
   std::cout << "Loading libraries for PYTHIA8" << std::endl;
-  gSystem->Load("libpythia8210dev.so");
+  gSystem->Load("libpythia8.so");
   gSystem->Load("libAliPythia8.so");
   gSystem->Setenv("PYTHIA8DATA", gSystem->ExpandPathName("$ALICE_ROOT/PYTHIA8/pythia8/xmldoc"));
   gSystem->Setenv("LHAPDF",      gSystem->ExpandPathName("$ALICE_ROOT/LHAPDF"));

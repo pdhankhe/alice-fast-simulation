@@ -110,10 +110,10 @@ def RunPowhegParallel(powhegExe, powheg_stage, job_number, load_packages_separat
     if load_packages_separately:
         with open(LogFileName, "w") as myfile:
             shell = subprocess.Popen(["bash"], stdin=subprocess.PIPE, stdout=myfile, stderr=myfile)
-            shell.stdin.write("alienv enter VO_ALICE@POWHEG::r3178-alice1-1\n")
-            shell.stdin.write("which {}\n".format(powhegExe))
-            shell.stdin.write("{}\n".format(powhegExe))
-            shell.stdin.write("{}\n".format(job_number))
+            shell.stdin.write("alienv enter VO_ALICE@POWHEG::r3178-alice1-1\n".encode())
+            shell.stdin.write("which {}\n".format(powhegExe).encode())
+            shell.stdin.write("{}\n".format(powhegExe).encode())
+            shell.stdin.write("{}\n".format(job_number).encode())
             shell.communicate()
     else:
         print("Running POWHEG...")
@@ -148,9 +148,9 @@ def RunPowhegSingle(powhegExe, load_packages_separately):
         print("Running POWHEG...")
         with open("powheg.log", "w") as myfile:
             shell = subprocess.Popen(["bash"], stdin=subprocess.PIPE, stdout=myfile, stderr=myfile)
-            shell.stdin.write("alienv enter VO_ALICE@POWHEG::r3178-alice1-1\n")
-            shell.stdin.write("which {}\n".format(powhegExe))
-            shell.stdin.write("{}\n".format(powhegExe))
+            shell.stdin.write("alienv enter VO_ALICE@POWHEG::r3178-alice1-1\n".encode())
+            shell.stdin.write("which {}\n".format(powhegExe).encode())
+            shell.stdin.write("{}\n".format(powhegExe).encode())
             shell.communicate()
     else:
         print("Running POWHEG...")
@@ -446,11 +446,11 @@ def main(events, powheg_stage, job_number, yamlConfigFile, batch_job, input_even
         aliphysics_pkg = "VO_ALICE@AliPhysics::{aliphysics}".format(aliphysics=AliPhysicsVersion)
         with open("sim_{0}.log".format(fname), "w") as myfile:
             shell = subprocess.Popen(["bash"], stdin=subprocess.PIPE, stdout=myfile, stderr=myfile)
-            shell.stdin.write("alienv enter {}\n".format(aliphysics_pkg))
-            shell.stdin.write("which aliroot\n")
-            shell.stdin.write("tar -xf HepMC.tar\n")
-#            shell.stdin.write("make\n")
-            shell.stdin.write("aliroot -b -l -q 'start_simulation.C(\"{0}\", {1}, \"{2}\", \"{3}\", {4}, \"{5}\", \"{6}\", \"{7}\", {8}, {9}, {10}, {11}, {12}, {13}, {14})'\n".format(fname, events, proc, gen, rnd, LHEfile, HEPfile, beamType, ebeam1, ebeam2, int(always_d_mesons), int(extended_event_info), minpthard, maxpthard, debug_level))
+            shell.stdin.write("alienv enter {}\n".format(aliphysics_pkg).encode())
+            shell.stdin.write("which aliroot\n".encode())
+            shell.stdin.write("tar -xf HepMC.tar\n".encode())
+#            shell.stdin.write("make\n".encode())
+            shell.stdin.write("aliroot -b -l -q 'start_simulation.C(\"{0}\", {1}, \"{2}\", \"{3}\", {4}, \"{5}\", \"{6}\", \"{7}\", {8}, {9}, {10}, {11}, {12}, {13}, {14})'\n".format(fname, events, proc, gen, rnd, LHEfile, HEPfile, beamType, ebeam1, ebeam2, int(always_d_mesons), int(extended_event_info), minpthard, maxpthard, debug_level).encode())
             shell.communicate()
     else:
 #        print("Compiling analysis code...")

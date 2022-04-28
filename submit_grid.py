@@ -68,9 +68,12 @@ def AlienCopy(source, destination, attempts=3, overwrite=False):
         dest = "alien://{0}".format(destination)
     else:
         dest = destination
+    
+    if source.find('/alien') != 0:
+      src = 'file:' + source
 
     while True:
-        subprocessCall(["alien_cp", source, dest])
+        subprocessCall(["alien_cp", src, dest])
         i += 1
         fileExists = AlienFileExists(destination)
         if fileExists:
@@ -367,7 +370,7 @@ def SubmitProcessingJobs(TrainName, LocalPath, AlienPath, AliPhysicsVersion, Off
             FilesToCopy.append(HerwigTune)
         FilesToDelete.append("herwig.in")
         if not LoadPackagesSeparately:
-            Packages += "\"VO_ALICE@AliGenerators::v20200305-1\",\n"
+            Packages += "\"VO_ALICE@AliGenerators::v20220424-1\",\n"
 
     if PtHardList and len(PtHardList) > 1:
         minPtHardBin = 0
@@ -532,10 +535,10 @@ def main(UserConf, yamlFileName, Offline, GridUpdate, OldPowhegInit, PowhegStage
     except subprocess.CalledProcessError:
         print("Environment is not configured correctly!")
         exit()
-
-    print("Root: " + rootPath)
-    print("AliRoot: " + alirootPath)
-    print("Alien: " + alienPath)
+    encoding = 'utf-8'
+    print("Root: " + str(rootPath, encoding))
+    print("AliRoot: " + str(alirootPath, encoding))
+    print("Alien: " + str(alienPath, encoding))
 
     try:
         print("Token info disabled")
