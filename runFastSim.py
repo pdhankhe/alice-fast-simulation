@@ -444,6 +444,7 @@ def main(events, powheg_stage, job_number, yamlConfigFile, batch_job, input_even
     if load_packages_separately:
         AliPhysicsVersion = GetAliPhysicsVersion(config["grid_config"]["aliphysics"])
         aliphysics_pkg = "VO_ALICE@AliPhysics::{aliphysics}".format(aliphysics=AliPhysicsVersion)
+        aligenerator_pkg = "AliGenerators/v20220424-1"
         with open("sim_{0}.log".format(fname), "w") as myfile:
             shell = subprocess.Popen(["bash"], stdin=subprocess.PIPE, stdout=myfile, stderr=myfile)
             shell.stdin.write("alienv enter {}\n".format(aliphysics_pkg).encode())
