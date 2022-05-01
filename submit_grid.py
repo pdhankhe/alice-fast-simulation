@@ -276,7 +276,7 @@ def SubmitMergingJobs(TrainName, LocalPath, AlienPath, AliPhysicsVersion, Offlin
         f.write(JdlContent)
         f.close()
 
-        XmlContent = GenerateXMLCollection(PreviousStagePath, XmlFile)
+        XmlContent = GenerateXMLCollection(PreviousStagePath, f'{AlienDest}/{XmlFile}')
         f = open(XmlFile, 'w')
         f.write(XmlContent)
         f.close()
