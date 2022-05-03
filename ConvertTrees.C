@@ -21,7 +21,7 @@ void ConvertTrees(TString sPathFileInput)
   TString sPathFileOutput = sPathFileInput;
   sPathFileOutput.ReplaceAll("AnalysisResults_FastSim", "trees");
 
-  TString sLabelsHadron[] = {"D0", "Lc"};
+  TString sLabelsHadron[] = {"D0", "Lc", "Ds"};
   const Int_t iNHadrons = sizeof(sLabelsHadron) / sizeof(sLabelsHadron[0]);
 
   TFile* fileIn = 0;

@@ -19,7 +19,7 @@ void POWHEG(TString sPathFileInputPattern, TString sLabelHadron = "Lc" /*Lc, D0*
   // 0 - prompt
   // 1 - feed-down (non-prompt)
 
-  if(sLabelHadron != "Lc" && sLabelHadron != "D0")
+  if(sLabelHadron != "Ds" && sLabelHadron != "Lc" && sLabelHadron != "D0")
   {
     printf("Error: Unknown particle %s\n", sLabelHadron.Data());
     return;

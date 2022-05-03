@@ -54,6 +54,7 @@ OnTheFlySimulationGenerator::OnTheFlySimulationGenerator() :
   fJetTree(kFALSE),
   fDMesonJets(kFALSE),
   fLcJets(kFALSE),
+  fDsJets(kFALSE),
   fEnergyBeam1(3500),
   fEnergyBeam2(3500),
   fRejectISR(kFALSE),
@@ -90,6 +91,7 @@ OnTheFlySimulationGenerator::OnTheFlySimulationGenerator(TString taskname) :
   fJetTree(kFALSE),
   fDMesonJets(kFALSE),
   fLcJets(kFALSE),
+  fDsJets(kFALSE),
   fEnergyBeam1(3500),
   fEnergyBeam2(3500),
   fRejectISR(kFALSE),
@@ -126,6 +128,7 @@ OnTheFlySimulationGenerator::OnTheFlySimulationGenerator(TString taskname, Int_t
   fJetTree(kFALSE),
   fDMesonJets(kFALSE),
   fLcJets(kFALSE),
+  fDsJets(kFALSE),
   fEnergyBeam1(3500),
   fEnergyBeam2(3500),
   fRejectISR(kFALSE),
@@ -183,10 +186,10 @@ void OnTheFlySimulationGenerator::PrepareAnalysisManager()
 
   if (fJetQA) AddJetQA();
 
-  if (fDMesonJets || fLcJets) AddHFJets();
+  if (fDMesonJets || fLcJets || fDsJets) AddHFJets();
 
   if (fJetTree) {
-    if (fDMesonJets || fLcJets) {
+    if (fDMesonJets || fLcJets || fDsJets) {
       TString fname(AliAnalysisManager::GetCommonFileName());
       fname.ReplaceAll(".root", "_jets.root");
       AddJetTree(fname);
@@ -258,7 +261,7 @@ void OnTheFlySimulationGenerator::AddHFJets(const char* file_name)
   }
 
   UInt_t rejectOrigin = 0;
-  Int_t iNTrees = Int_t(fDMesonJets) + Int_t(fLcJets);
+  Int_t iNTrees = Int_t(fDMesonJets) + Int_t(fLcJets) + Int_t(fDsJets);
 
   AliAnalysisTaskHFJets* pHFJetsTask = AliAnalysisTaskHFJets::AddTaskHFJets("", "", "usedefault", iNTrees);
   pHFJetsTask->SetVzRange(-999,999);
@@ -293,6 +296,14 @@ void OnTheFlySimulationGenerator::AddHFJets(const char* file_name)
   if (fLcJets)
   {
     eng = pHFJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kLctopK0s, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kChargedJet, 0.4);
+    eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
+    eng->SetRejectedOriginMap(rejectOrigin);
+    eng->SetJetEtaRange(-dEtaJetMax, dEtaJetMax);
+    eng->SetJetPtRange(0., dPtJetMax);
+  }
+  if (fDsJets)
+  {
+    eng = pHFJetsTask->AddAnalysisEngine(AliAnalysisTaskHFJets::kDstoKKpi, "", "", AliAnalysisTaskHFJets::kMCTruth, AliJetContainer::kChargedJet, 0.4);
     eng->SetAcceptedDecayMap(AliAnalysisTaskHFJets::EMesonDecayChannel_t::kAnyDecay);
     eng->SetRejectedOriginMap(rejectOrigin);
     eng->SetJetEtaRange(-dEtaJetMax, dEtaJetMax);

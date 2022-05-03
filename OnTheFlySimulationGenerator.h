@@ -61,6 +61,7 @@ public:
   void EnableJetTree(Bool_t b = kTRUE)                    { fJetTree         = b             ; }
   void EnableDMesonJets(Bool_t b = kTRUE)                 { fDMesonJets      = b             ; }
   void EnableLcJets(Bool_t b = kTRUE)                     { fLcJets          = b             ; }
+  void EnableDsJets(Bool_t b = kTRUE)                     { fDsJets          = b             ; }
   void SetBeamType(EBeamType_t b)                         { fBeamType        = b             ; }
   void SetRejectISR(Bool_t b)                             { fRejectISR       = b             ; }
   void SetPartonEventGenerator(EGenerator_t gen)          { fPartonEvent     = gen           ; }
@@ -119,6 +120,7 @@ protected:
   Bool_t               fJetTree          ;
   Bool_t               fDMesonJets       ;
   Bool_t               fLcJets           ;
+  Bool_t               fDsJets           ;
   Float_t              fEnergyBeam1      ; // in GeV
   Float_t              fEnergyBeam2      ; // in GeV
   Bool_t               fRejectISR        ;

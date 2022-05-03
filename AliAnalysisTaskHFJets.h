@@ -84,7 +84,7 @@ public:
   typedef AliJetContainer::ERecoScheme_t ERecoScheme_t;
 
   enum EOutputType_t { kNoOutput, kTreeOutput, kTHnOutput, kOnlyQAOutput, kTreeExtendedOutput };
-  enum ECandidateType_t  { kD0toKpi, kDstartoKpipi, kD0toKpiLikeSign, kLctopK0s };
+  enum ECandidateType_t  { kD0toKpi, kDstartoKpipi, kD0toKpiLikeSign, kLctopK0s, kDstoKKpi};
   enum EMCMode_t { kNoMC, kSignalOnly, kBackgroundOnly, kMCTruth, kD0Reflection, kOnlyWrongPIDAccepted };
   enum EMesonOrigin_t {
     kUnknownQuark = BIT(0),
@@ -103,7 +103,9 @@ public:
     kUnknownDecay        = BIT(0),
     kDecayD0toKpi        = BIT(1),
     kDecayDStartoKpipi   = BIT(2),
-    kDecayLctopK0s       = BIT(3)
+    kDecayLctopK0s       = BIT(3),
+    kDecayDstoKKpi       = BIT(4),
+    kDecayPhitoKK        = BIT(5)
   };
 
   enum EAxis_t {

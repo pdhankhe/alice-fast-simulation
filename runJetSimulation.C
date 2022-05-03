@@ -338,6 +338,7 @@ void runJetSimulation(TString name, Int_t pythiaEvents, TString procStr, TString
   if (always_d_mesons || procStr.Contains("charm") || procStr.Contains("beauty")) {
     sim->EnableDMesonJets();
     sim->EnableLcJets();
+    sim->EnableDsJets();
   }
   if (beamType == "pPb") {
     sim->SetBeamType(OnTheFlySimulationGenerator::kpPb);

@@ -99,7 +99,7 @@ void summary(TString sPathFileInputPattern, Bool_t bExtended = 0)
 //  printf("Scaling factor: %g\n", dScaleFactor);
   printf("xsection:\t%g\n", XSections_Weights);
 
-  TString sLabelsHadron[2] = {"D0", "Lc"};
+  TString sLabelsHadron[2] = {"D0", "Lc", "Ds"};
 
   for(Int_t iH = 0; iH < 2; iH++)
   {
