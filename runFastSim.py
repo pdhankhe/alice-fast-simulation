@@ -354,7 +354,7 @@ def main(events, powheg_stage, job_number, yamlConfigFile, batch_job, input_even
     os.chdir(dname)
 
     f = open(yamlConfigFile, 'r')
-    config = yaml.load(f)
+    config = yaml.safe_load(f)
     f.close()
 
     if "load_packages_separately" in config["grid_config"]:
@@ -517,6 +517,8 @@ if __name__ == '__main__':
                         default=0, type=int)
     parser.add_argument('-d', metavar='debug_level',
                         default=0, type=int)
-    args = parser.parse_args()
+    
+    args, unknown = parser.parse_known_args()
+    print('[+] Unknown arguments : ' + repr(unknown))
 
     main(args.numevents, args.powheg_stage, args.job_number, args.config, args.batch_job, args.input_events, args.minpthard, args.maxpthard, args.d)
