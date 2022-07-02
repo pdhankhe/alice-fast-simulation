@@ -14,7 +14,7 @@ def LoadUserConfiguration(path):
         return GenerateUserConfiguration(path)
 
     f = open(path, 'r')
-    config = yaml.load(f)
+    config = yaml.safe_load(f)
     f.close()
     return config
 

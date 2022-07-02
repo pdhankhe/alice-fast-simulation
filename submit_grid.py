@@ -180,9 +180,7 @@ Output = {{ \n\
 }}; \n\
 Arguments = \"{trainName} --xml wn.xml\"; \n\
 Packages = {{ \n\
-\"VO_ALICE@AliPhysics::{aliphysics}\", \n\
 \"VO_ALICE@Python-modules::1.0-117\" \n\
-#\"VO_ALICE@Python-modules::1.0-51\" \n\
 }}; \n\
 # JDL variables \n\
 JDLVariables = \n\
@@ -497,7 +495,7 @@ def GetAliPhysicsVersion(ver):
 
 def main(UserConf, yamlFileName, Offline, GridUpdate, OldPowhegInit, PowhegStage, Merge, Download, MergingStage):
     f = open(yamlFileName, 'r')
-    config = yaml.load(f)
+    config = yaml.safe_load(f)
     f.close()
 
     if "load_packages_separately" in config["grid_config"]:
