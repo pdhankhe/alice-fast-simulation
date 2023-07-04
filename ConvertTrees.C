@@ -89,6 +89,24 @@ void ConvertTrees(TString sPathFileInput)
   Double32_t  fRK2       ; //[-0.004,1.020,10]
   /// R k_T, precision 0.001
   Double32_t  fRKT       ; //[-0.004,1.020,10]
+  /// R k_T, precision 0.001
+  Double32_t  fLB1K1     ; //[-0.004,1.020,10]
+  /// R k_T, precision 0.001
+  Double32_t  fLB15K1    ; //[-0.004,1.020,10]
+  /// R k_T, precision 0.001
+  Double32_t  fLB2K1     ; //[-0.004,1.020,10]
+  /// R k_T, precision 0.001
+  Double32_t  fLB3K1     ; //[-0.004,1.020,10]
+
+  Double32_t  fR_std_default    ; //[-0.004,1.020,10]
+  /// R k_T, precision 0.001
+  Double32_t  fR_WTA    ; //[-0.004,1.020,10]
+  //    /// R k_T, precision 0.001
+  Double32_t  fR_SD    ; //[-0.004,1.020,10]
+  //        /// R k_T, precision 0.001
+  Double32_t  fR_STD_WTA    ; //[-0.004,1.020,10]
+  Double32_t  fR_STD_SD ;
+  Double32_t  fR_WTA_SD ; 
 
   fileIn = new TFile(sPathFileInput.Data());
   if(fileIn->IsZombie())
@@ -147,7 +165,9 @@ void ConvertTrees(TString sPathFileInput)
     treeOut[iH]->Branch("eta_jet", &dEtaJet);
     treeOut[iH]->Branch("phi_jet", &dPhiJet);
     treeOut[iH]->Branch("delta_r_jet", &dR);
+    treeOut[iH]->Branch("n_const", &iNConst);
     treeOut[iH]->Branch("z", &dZJet);
+    /*treeOut[iH]->Branch("z", &dZJet);
     treeOut[iH]->Branch("n_const", &iNConst);
     treeOut[iH]->Branch("zg_jet", &dZgJet);
     treeOut[iH]->Branch("rg_jet", &dRgJet);
@@ -164,7 +184,17 @@ void ConvertTrees(TString sPathFileInput)
     treeOut[iH]->Branch("rk0_jet", &fRK0);
     treeOut[iH]->Branch("rk1_jet", &fRK1);
     treeOut[iH]->Branch("rk2_jet", &fRK2);
-    treeOut[iH]->Branch("rkT_jet", &fRKT);
+    treeOut[iH]->Branch("rkT_jet", &fRKT);*/
+    treeOut[iH]->Branch("LB1K1_jet", &fLB1K1);
+    treeOut[iH]->Branch("LB15K1_jet", &fLB15K1);
+    treeOut[iH]->Branch("LB2K1_jet", &fLB2K1);
+    treeOut[iH]->Branch("LB3K1_jet", &fLB3K1);
+    treeOut[iH]->Branch("delta_r_jet_std", &fR_std_default);
+    treeOut[iH]->Branch("delta_r_jet_wta", &fR_WTA);
+    treeOut[iH]->Branch("delta_r_jet_sd", &fR_SD);
+    treeOut[iH]->Branch("delta_r_jet_std_sd", &fR_STD_SD);
+    treeOut[iH]->Branch("delta_r_jet_std_wta", &fR_STD_WTA);
+    treeOut[iH]->Branch("delta_r_jet_wta_sd", &fR_WTA_SD);
 
     Int_t iNEntries = treeIn[iH]->GetEntries();
     printf("Starting the %s loop for %d entries.\n", sLabelsHadron[iH].Data(), iNEntries);
@@ -181,7 +211,7 @@ void ConvertTrees(TString sPathFileInput)
       dEtaJet = HFJet->fEta;
       dPhiJet = HFJet->fPhi;
       dR = HFJet->fR;
-      dZJet = HFJet->fZ;
+     /*dZJet = HFJet->fZ;
       iNConst = HFJet->fN;
       dZgJet = HFJet->fZg;
       dRgJet = HFJet->fRg;
@@ -198,7 +228,18 @@ void ConvertTrees(TString sPathFileInput)
       fRK0 = HFJet->fRK0;
       fRK1 = HFJet->fRK1;
       fRK2 = HFJet->fRK2;
-      fRKT = HFJet->fRKT;
+      fRKT = HFJet->fRKT;*/
+      fLB1K1 = HFJet->fLB1K1;
+      fLB15K1 = HFJet->fLB15K1;
+      fLB2K1 = HFJet->fLB2K1;
+      fLB3K1 = HFJet->fLB3K1;
+      fR_std_default = HFJet->fR_std_default;
+      fR_WTA = HFJet->fR_WTA;
+      fR_SD = HFJet->fR_SD;
+      fR_STD_SD = HFJet->fR_STD_SD;
+      fR_STD_WTA = HFJet->fR_STD_WTA;
+      fR_WTA_SD = HFJet->fR_WTA_SD;
+
       treeOut[iH]->Fill();
     }
     printf("End of the %s loop.\n", sLabelsHadron[iH].Data());

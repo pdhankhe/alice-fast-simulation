@@ -377,6 +377,8 @@ AliGenerator* OnTheFlySimulationGenerator::CreateGenerator()
 
   if (fHadronization == kPythia6) {
     genHadronization = CreatePythia6Gen(fBeamType, GetCMSEnergy(), fPartonEvent, fLHEFile, fPythia6Tune, fProcess, fSpecialParticle, fMinPtHard, fMaxPtHard);
+    
+
     if (fDecayer != kPythia6 && fDecayer != kEvtGen) {
       AliErrorGeneralStream("OnTheFlySimulationGenerator") << "Decayer '" << fDecayer << "' not valid!!!" << std::endl;
       return nullptr;
@@ -384,6 +386,8 @@ AliGenerator* OnTheFlySimulationGenerator::CreateGenerator()
   }
   else if (fHadronization == kPythia8) {
     genHadronization = CreatePythia8Gen(fBeamType, GetCMSEnergy(), fPartonEvent, fLHEFile, fPythia8Tune, fProcess, fSpecialParticle, fMinPtHard, fMaxPtHard);
+
+
     if (fDecayer != kPythia8 && fDecayer != kEvtGen) {
       AliErrorGeneralStream("OnTheFlySimulationGenerator") << "Decayer '" << fDecayer << "' not valid!!!" << std::endl;
       return nullptr;

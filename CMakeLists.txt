@@ -1,5 +1,4 @@
 set(MODULE_NAME "AnalysisCode")
-
 # Minimum version of CMake
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8 FATAL_ERROR)
 
@@ -21,6 +20,12 @@ SET(INC_SRC_DIR ${CMAKE_SOURCE_DIR})
 # Library name
 SET(LIBRARY_NAME ${MODULE_NAME})
 
+# include dirs
+#include_directories(include/)
+include_directories(${INC_SRC_DIR})
+include_directories($ENV{ALICE_ROOT}/include)
+include_directories($ENV{ALICE_PHYSICS}/include)
+include_directories($ENV{FASTJET}/include)
 # Required source files to build the library.
 set(SRCS
     ${IMP_SRC_DIR}/AliAnalysisTaskHFJets.cxx
@@ -33,7 +38,8 @@ set(SRCS
     ${IMP_SRC_DIR}/AliPythiaBase_dev.cxx
     ${IMP_SRC_DIR}/OnTheFlySimulationGenerator.cxx
     ${IMP_SRC_DIR}/THepMCParser_dev.cxx
-   )
+     ${IMP_SRC_DIR}//ecorrel.cxx
+	)
 
 # Requried headers to build the library.
 set(HEADERS
@@ -48,13 +54,16 @@ set(HEADERS
     ${INC_SRC_DIR}/OnTheFlySimulationGenerator.h
     ${INC_SRC_DIR}/THepMCParser_dev.h
     ${INC_SRC_DIR}/PythiaProcess_dev.h
-  )
+    ${INC_SRC_DIR}/ecorrel.hh
+	)
+
+
 # include dirs
 #include_directories(include/)
-include_directories(${INC_SRC_DIR})
-include_directories($ENV{ALICE_ROOT}/include)
-include_directories($ENV{ALICE_PHYSICS}/include)
-include_directories($ENV{FASTJET}/include)
+#include_directories(${INC_SRC_DIR})
+#include_directories($ENV{ALICE_ROOT}/include)
+#include_directories($ENV{ALICE_PHYSICS}/include)
+#include_directories($ENV{FASTJET}/include)
 
 ########
 # ROOT #
