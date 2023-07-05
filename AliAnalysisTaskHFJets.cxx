@@ -3090,7 +3090,10 @@ void AliAnalysisTaskHFJets::AnalysisEngine::RunParticleLevelAnalysis()
         hname = TString::Format("%s/%s/fThnSparse_EEC_Dmeson", GetName(), jetDef.GetName());
         THnSparse*  thnsparse_EEC = static_cast<THnSparse*>(fHistManager->FindObject(hname));
         double thnsparse_EEC_value[5]  = {0, 0, 0, 0, 0};
-        
+       
+	hname = TString::Format("%s/%s/fThnSparse_EEC_woEnergyWeight_Dmeson", GetName(), jetDef.GetName());
+	THnSparse*  thnsparse_EEC_woEnergyWeight = static_cast<THnSparse*>(fHistManager->FindObject(hname));
+
         hname = TString::Format("%s/%s/fThnSparse_Dmeson_jetinfo", GetName(), jetDef.GetName());
         THnSparse*  thnsparse_jetinfo = static_cast<THnSparse*>(fHistManager->FindObject(hname));
         double thnsparse_jetinfo_value[5]  = {0, 0, 0, 0, 0};
@@ -3341,7 +3344,8 @@ void AliAnalysisTaskHFJets::AnalysisEngine::RunParticleLevelAnalysis()
                         thnsparse_EEC_value[3] = Dparton_type;
                         thnsparse_EEC_value[4] = (*ecorr->correlator(2)->rs())[npair];
                         thnsparse_EEC->Fill(thnsparse_EEC_value, (*ecorr->correlator(2)->weights())[npair]);
-                    }
+                    	thnsparse_EEC_woEnergyWeight->Fill(thnsparse_EEC_value);
+			}
                     
                 } // if constituent is a D meson
                 
@@ -3848,7 +3852,31 @@ void AliAnalysisTaskHFJets::UserCreateOutputObjects()
 
                 }
 
-  
+		hname = TString::Format("%s/%s/fThnSparse_EEC_woEnergyWeight_Dmeson", param.GetName(), jetDef.GetName());
+                htitle = hname + ";#it{p}_{T,ch jet};#it{\eta}_{ch jet};Dpt; parton type;#it{R}_{L}";
+ 		h_thnsparse = fHistManager.CreateTHnSparse(hname, htitle, dim, nbins, min, max);
+		
+		for(int axis=0; axis < dim; axis++){
+
+                        if (axis == 0 || axis == 2) {
+                        h_thnsparse->SetBinEdges(axis, &pt_bins_jet[0]);
+                        }
+
+                        if (axis == 1) {
+                        h_thnsparse->SetBinEdges(axis, &eta_bins[0]);
+                        }
+
+                        if (axis == 3) {
+                        h_thnsparse->SetBinEdges(axis, &cand_type[0]);
+                         }
+
+                        if (axis == 4) {
+                        h_thnsparse->SetBinEdges(axis, &RL_bins[0]);
+                         }
+
+                }
+ 
+
 		int nbins_jetinfo[5] = {60, 16, 60 , 8, 60 };
                 double min_jetinfo[5] = {pt_bins_jet[0], eta_bins[0], D_pt_bins_jet[0], cand_type[0], NConst[0]};
                 double max_jetinfo[5]  =  {pt_bins_jet[-1], eta_bins[-1], D_pt_bins_jet[-1], cand_type[-1], NConst[-1]};
