@@ -3081,6 +3081,9 @@ void AliAnalysisTaskHFJets::AnalysisEngine::RunParticleLevelAnalysis()
         hname = TString::Format("%s/%s/fHistNDmesonsVsNconstituents", GetName(), jetDef.GetName());
         TH1* histNDmesonsVsNconstituents = static_cast<TH1*>(fHistManager->FindObject(hname));
         
+        hname = TString::Format("%s/%s/fHistNDStar_pt", GetName(), jetDef.GetName());
+        TH3* histNDStar_pionInfo = static_cast<TH3*>(fHistManager->FindObject(hname));
+        
         hname = TString::Format("%s/%s/fHistjetptVsDptVsNconstituents", GetName(), jetDef.GetName());
         TH3*  histjetptVsDptVsNconstituents = static_cast<TH3*>(fHistManager->FindObject(hname));
         
@@ -3090,10 +3093,14 @@ void AliAnalysisTaskHFJets::AnalysisEngine::RunParticleLevelAnalysis()
         hname = TString::Format("%s/%s/fThnSparse_EEC_Dmeson", GetName(), jetDef.GetName());
         THnSparse*  thnsparse_EEC = static_cast<THnSparse*>(fHistManager->FindObject(hname));
         double thnsparse_EEC_value[5]  = {0, 0, 0, 0, 0};
-       
-	hname = TString::Format("%s/%s/fThnSparse_EEC_woEnergyWeight_Dmeson", GetName(), jetDef.GetName());
-	THnSparse*  thnsparse_EEC_woEnergyWeight = static_cast<THnSparse*>(fHistManager->FindObject(hname));
-
+        
+        hname = TString::Format("%s/%s/fThnSparse_EEC_ptRL_Dmeson", GetName(), jetDef.GetName());
+        THnSparse*  thnsparse_ptRL_EEC = static_cast<THnSparse*>(fHistManager->FindObject(hname));
+        double thnsparse_EEC_ptRL_value[5]  = {0, 0, 0, 0, 0};
+        
+        hname = TString::Format("%s/%s/fThnSparse_EEC_woEnergyWeight_Dmeson", GetName(), jetDef.GetName());
+        THnSparse*  thnsparse_EEC_woEnergyWeight = static_cast<THnSparse*>(fHistManager->FindObject(hname));
+        
         hname = TString::Format("%s/%s/fThnSparse_Dmeson_jetinfo", GetName(), jetDef.GetName());
         THnSparse*  thnsparse_jetinfo = static_cast<THnSparse*>(fHistManager->FindObject(hname));
         double thnsparse_jetinfo_value[5]  = {0, 0, 0, 0, 0};
@@ -3226,6 +3233,27 @@ void AliAnalysisTaskHFJets::AnalysisEngine::RunParticleLevelAnalysis()
                         p = 0;
                         rs = origin.first;
                         while(rs >>= 1) { p++; }
+                        Int_t motherindex = part->GetMother();
+                        if (motherindex > 0){
+                                    TClonesArray* mcArray = fMCContainer->GetArray();
+                                    AliAODMCParticle *mother = (AliAODMCParticle*)mcArray->At(motherindex);
+                                    UInt_t abspdgMother = TMath::Abs(mother->GetPdgCode());
+                                    if (abspdgMother == 413) {
+
+                                    AliAODMCParticle* d1 = static_cast<AliAODMCParticle*>(mcArray->At(mother->GetDaughter(0)));
+                                    AliAODMCParticle* d2 = static_cast<AliAODMCParticle*>(mcArray->At(mother->GetDaughter(1)));
+                                    Int_t absPdg1 = TMath::Abs(d1->GetPdgCode());
+                                    Int_t absPdg2 = TMath::Abs(d2->GetPdgCode());
+
+                                    if(absPdg1 == 421 && absPdg2 == 211)  {   // D0 pi
+                                            histNDStar_pionInfo->Fill(jet.pt(), d1->Pt(), d2->Pt());}
+                                   else if(absPdg1 == 211 && absPdg2 == 421) {
+                                       histNDStar_pionInfo->Fill(jet.pt(), d2->Pt(), d1->Pt());
+                                            }
+                                    continue;
+                                        }
+                        }
+                    
                         (*dMesonJetIt).second.fPartonType = p;
                         (*dMesonJetIt).second.fParton = origin.second;
                         Dparton_type = p;
@@ -3294,7 +3322,7 @@ void AliAnalysisTaskHFJets::AnalysisEngine::RunParticleLevelAnalysis()
                     fastjet::ClusterSequence cluster_sequence_SD(jet.constituents(), SDJet_definition);
                     std::vector<fastjet::PseudoJet> reclustered_jet_SD = fastjet::sorted_by_pt(cluster_sequence_SD.inclusive_jets(fMinSubJetPt));
                     fastjet::PseudoJet jet_SD = reclustered_jet_SD[0];
-                    double z_cut = 0.20;
+                    double z_cut = 0.10;
                     double beta  = 0;
                     bool bSoftdroppedPass = kTRUE;
                     fastjet::contrib::SoftDrop sd(beta, z_cut);
@@ -3310,9 +3338,9 @@ void AliAnalysisTaskHFJets::AnalysisEngine::RunParticleLevelAnalysis()
                     }
                     
                     else {
-                        (*dMesonJetIt).second.fJets[jetDef.GetName()].fR_SD = -0.1;
-                        (*dMesonJetIt).second.fJets[jetDef.GetName()].fR_STD_SD = -0.1;
-                        (*dMesonJetIt).second.fJets[jetDef.GetName()].fR_WTA_SD = -0.1;
+                        (*dMesonJetIt).second.fJets[jetDef.GetName()].fR_SD = -0.025;
+                        (*dMesonJetIt).second.fJets[jetDef.GetName()].fR_STD_SD = -0.025;
+                        (*dMesonJetIt).second.fJets[jetDef.GetName()].fR_WTA_SD = -0.025;
                     }
                     
                     Dmeson = (*dMesonJetIt).second.fD;
@@ -3344,8 +3372,15 @@ void AliAnalysisTaskHFJets::AnalysisEngine::RunParticleLevelAnalysis()
                         thnsparse_EEC_value[3] = Dparton_type;
                         thnsparse_EEC_value[4] = (*ecorr->correlator(2)->rs())[npair];
                         thnsparse_EEC->Fill(thnsparse_EEC_value, (*ecorr->correlator(2)->weights())[npair]);
-                    	thnsparse_EEC_woEnergyWeight->Fill(thnsparse_EEC_value);
-			}
+                        thnsparse_EEC_woEnergyWeight->Fill(thnsparse_EEC_value);
+                        
+                        thnsparse_EEC_ptRL_value[0] = jet.pt();
+                        thnsparse_EEC_ptRL_value[1] = jet.eta();
+                        thnsparse_EEC_ptRL_value[2] = Dmeson.pt();
+                        thnsparse_EEC_ptRL_value[3] = Dparton_type;
+                        thnsparse_EEC_ptRL_value[4] = jet.pt()*((*ecorr->correlator(2)->rs())[npair]);
+                        thnsparse_ptRL_EEC->Fill(thnsparse_EEC_ptRL_value, (*ecorr->correlator(2)->weights())[npair]);
+                    }
                     
                 } // if constituent is a D meson
                 
@@ -3771,6 +3806,10 @@ void AliAnalysisTaskHFJets::UserCreateOutputObjects()
                 htitle = hname + ";#it{N}_{constituents};#it{N}_{D};counts";
                 h = fHistManager.CreateTH2(hname, htitle, 51, -0.5, 50.5, 10, 0.5, 10.5);
                 
+                hname = TString::Format("%s/%s/fHistNDStar_pt", param.GetName(), jetDef.GetName());
+                htitle = hname + ";it{p}_{T, jet};#it{p}_{T, D};#it{p}_{T, #pion_{slow}}";
+                h3D = fHistManager.CreateTH3(hname, htitle,60, 0, 60, 60, 0, 60, 60, 0., 60);
+                
                 hname = TString::Format("%s/%s/fHistjetptVsDptVsConstz", param.GetName(), jetDef.GetName());
                 htitle = hname + ";#it{p}_{T,ch jet};Dpt;z_constituent";
                 h3D = fHistManager.CreateTH3(hname, htitle, 100, 0, 100, 50, 0, 50, 100, 0., 1.);
@@ -3783,80 +3822,55 @@ void AliAnalysisTaskHFJets::UserCreateOutputObjects()
                 htitle = hname + ";#it{p}_{T,ch jet};#it{\eta}_{ch jet};Dpt; parton type;#it{R}_{L}";
                 
 
-		int dim = 5;
-		std::vector<double> RL_bins(51);  // Creating an array to store the values
-		start = std::log10(1E-4);
-    		end = std::log10(1);
-   		step = (end - start) / (RL_bins.size() - 1);
-		for (int i = 0; i < RL_bins.size(); i++) {
-        		RL_bins[i] = std::pow(10, start + i * step);
-    		}
+                int dim = 5;
+                std::vector<double> RL_bins(51);  // Creating an array to store the values
+                start = std::log10(1E-4);
+                end = std::log10(1);
+                step = (end - start) / (RL_bins.size() - 1);
+                for (int i = 0; i < RL_bins.size(); i++) {
+                    RL_bins[i] = std::pow(10, start + i * step);
+                }
 		
-		std::vector<double> pt_bins_jet(61);  // Creating an array to store the values
-		std::vector<double> D_pt_bins_jet(61);  // Creating an array to store the values
-    		std::vector<double> NConst(61);  // Creating an array to store the values
-		std::vector<double> cand_type(9);  // Creating an array to store the values
+                std::vector<double> pt_bins_jet(61);  // Creating an array to store the values
+                std::vector<double> D_pt_bins_jet(61);  // Creating an array to store the values
+                std::vector<double> NConst(61);  // Creating an array to store the values
+                std::vector<double> cand_type(9);  // Creating an array to store the values
 
-    		start = 0;
-    		end = 60;
-    		step = (end - start) / (pt_bins_jet.size() - 1);
+                start = 0;
+                end = 60;
+                step = (end - start) / (pt_bins_jet.size() - 1);
     
-    		for (int i = 0; i < pt_bins_jet.size(); i++) {
-        	pt_bins_jet[i] = start + i * step;
-		D_pt_bins_jet[i] = start + i * step; 
-   		NConst[i] = start + i * step;
-		}
+                for (int i = 0; i < pt_bins_jet.size(); i++) {
+                    pt_bins_jet[i] = start + i * step;
+                    D_pt_bins_jet[i] = start + i * step;
+                    NConst[i] = start + i * step;
+                }
 		
-		start = 0;
+                start = 0;
                 end = 8;
                 step = (end - start) / (cand_type.size() - 1);
 		
-		for (int i = 0; i < cand_type.size(); i++) {
-                cand_type[i] = start + i * step; 
+                for (int i = 0; i < cand_type.size(); i++) {
+                    cand_type[i] = start + i * step;
                 }
 
-		std::vector<double> eta_bins(17);  // Creating an array to store the values
+                std::vector<double> eta_bins(17);  // Creating an array to store the values
+                start = -0.8;
+                end = 0.8;
+                step = (end - start) / (eta_bins.size() - 1);
     
-    		start = -0.8;
-    		end = 0.8;
-    		step = (end - start) / (eta_bins.size() - 1);
-    
-    		for (int i = 0; i < eta_bins.size(); i++) {
-        		eta_bins[i] = start + i * step;
-   		 }
+                for (int i = 0; i < eta_bins.size(); i++) {
+                    eta_bins[i] = start + i * step;
+                }
 
 
                 int nbins[5] = {60, 16, 60 , 8, 50 };
                 double min[5] = {pt_bins_jet[0], eta_bins[0], D_pt_bins_jet[0], cand_type[0], RL_bins[0]};
                 double max[5]  = {pt_bins_jet[-1], eta_bins[-1], D_pt_bins_jet[-1], cand_type[-1], RL_bins[-1]};
                 
-		h_thnsparse = fHistManager.CreateTHnSparse(hname, htitle, dim, nbins, min, max);
+                h_thnsparse = fHistManager.CreateTHnSparse(hname, htitle, dim, nbins, min, max);
              
-		for(int axis=0; axis < dim; axis++){
-
-                        if (axis == 0 || axis == 2) {
-                        h_thnsparse->SetBinEdges(axis, &pt_bins_jet[0]);
-                        }
-
-                        if (axis == 1) {
-                        h_thnsparse->SetBinEdges(axis, &eta_bins[0]);
-                        }
-
-			if (axis == 3) {
-                        h_thnsparse->SetBinEdges(axis, &cand_type[0]);
-                         }
-
-                        if (axis == 4) {
-                        h_thnsparse->SetBinEdges(axis, &RL_bins[0]);
-                         }
-
-                }
-
-		hname = TString::Format("%s/%s/fThnSparse_EEC_woEnergyWeight_Dmeson", param.GetName(), jetDef.GetName());
-                htitle = hname + ";#it{p}_{T,ch jet};#it{\eta}_{ch jet};Dpt; parton type;#it{R}_{L}";
- 		h_thnsparse = fHistManager.CreateTHnSparse(hname, htitle, dim, nbins, min, max);
-		
-		for(int axis=0; axis < dim; axis++){
+                for(int axis=0; axis < dim; axis++){
 
                         if (axis == 0 || axis == 2) {
                         h_thnsparse->SetBinEdges(axis, &pt_bins_jet[0]);
@@ -3875,17 +3889,17 @@ void AliAnalysisTaskHFJets::UserCreateOutputObjects()
                          }
 
                 }
- 
 
-		int nbins_jetinfo[5] = {60, 16, 60 , 8, 60 };
+  
+                int nbins_jetinfo[5] = {60, 16, 60 , 8, 60 };
                 double min_jetinfo[5] = {pt_bins_jet[0], eta_bins[0], D_pt_bins_jet[0], cand_type[0], NConst[0]};
                 double max_jetinfo[5]  =  {pt_bins_jet[-1], eta_bins[-1], D_pt_bins_jet[-1], cand_type[-1], NConst[-1]};
                
-		hname = TString::Format("%s/%s/fThnSparse_Dmeson_jetinfo", param.GetName(), jetDef.GetName());
+                hname = TString::Format("%s/%s/fThnSparse_Dmeson_jetinfo", param.GetName(), jetDef.GetName());
                 htitle = hname + ";#it{p}_{T,ch jet};#it{\eta}_{ch jet};Dpt; parton type;#it{R}_{L}";
                 h_thnsparse = fHistManager.CreateTHnSparse(hname, htitle, dim, nbins_jetinfo, min_jetinfo, max_jetinfo);
  
-		 for(int axis=0; axis < dim; axis++){
+                for(int axis=0; axis < dim; axis++){
 
                         if (axis == 0 || axis == 2 || axis == 4) {
                         h_thnsparse->SetBinEdges(axis, &pt_bins_jet[0]);
@@ -3897,6 +3911,68 @@ void AliAnalysisTaskHFJets::UserCreateOutputObjects()
 
                         if (axis == 3) {
                         h_thnsparse->SetBinEdges(axis, &cand_type[0]);
+                         }
+
+                }
+                
+                hname = TString::Format("%s/%s/fThnSparse_EEC_woEnergyWeight_Dmeson", param.GetName(), jetDef.GetName());
+                htitle = hname + ";#it{p}_{T,ch jet};#it{\eta}_{ch jet};Dpt; parton type;#it{R}_{L}";
+                h_thnsparse = fHistManager.CreateTHnSparse(hname, htitle, dim, nbins, min, max);
+                
+                for(int axis=0; axis < dim; axis++){
+
+                        if (axis == 0 || axis == 2) {
+                        h_thnsparse->SetBinEdges(axis, &pt_bins_jet[0]);
+                        }
+
+                        if (axis == 1) {
+                        h_thnsparse->SetBinEdges(axis, &eta_bins[0]);
+                        }
+
+                        if (axis == 3) {
+                        h_thnsparse->SetBinEdges(axis, &cand_type[0]);
+                         }
+
+                        if (axis == 4) {
+                        h_thnsparse->SetBinEdges(axis, &RL_bins[0]);
+                         }
+
+                }
+                
+                
+                std::vector<double> ptRL_bins(61);  // Creating an array to store the values
+                start = std::log10(1E-3);
+                end = std::log10(1E2);
+                step = (end - start) / (ptRL_bins.size() - 1);
+                for (int i = 0; i < ptRL_bins.size(); i++) {
+                       ptRL_bins[i] = std::pow(10, start + i * step);
+                }
+                
+                hname = TString::Format("%s/%s/fThnSparse_EEC_ptRL_Dmeson", param.GetName(), jetDef.GetName());
+                htitle = hname + ";#it{p}_{T,ch jet};#it{\eta}_{ch jet};Dpt; parton type; #it{p}_{T}#it{R}_{L}";
+                
+                int nbins_ptRL[5] = {60, 16, 60 , 8, 60 };
+                double min_ptRL[5] = {pt_bins_jet[0], eta_bins[0], D_pt_bins_jet[0], cand_type[0], ptRL_bins[0]};
+                double max_ptRL[5]  = {pt_bins_jet[-1], eta_bins[-1], D_pt_bins_jet[-1], cand_type[-1], ptRL_bins[-1]};
+                
+                h_thnsparse = fHistManager.CreateTHnSparse(hname, htitle, dim, nbins_ptRL, min_ptRL, max_ptRL);
+
+                for(int axis=0; axis < dim; axis++){
+
+                        if (axis == 0 || axis == 2) {
+                        h_thnsparse->SetBinEdges(axis, &pt_bins_jet[0]);
+                        }
+
+                        if (axis == 1) {
+                        h_thnsparse->SetBinEdges(axis, &eta_bins[0]);
+                        }
+
+                        if (axis == 3) {
+                        h_thnsparse->SetBinEdges(axis, &cand_type[0]);
+                         }
+
+                        if (axis == 4) {
+                        h_thnsparse->SetBinEdges(axis, &ptRL_bins[0]);
                          }
 
                 }

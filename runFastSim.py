@@ -242,20 +242,20 @@ def RunHerwig(nevents, pdfid, load_packages_separately):
             cmd = "which Herwig"
             rc, out, err = alienv_exec(cmd, herwig_pkg)
             myfile.write("Command '{}' exited with return code '{}'\n".format(cmd, rc))
-            myfile.write(out)
+            myfile.write(str(out))
             myfile.write("\n")
-            myfile.write(err)
+            myfile.write(str(err))
             myfile.write("\n")
 
             # Verify that PDF is installed
             cmd = "lhapdf list --installed"
             rc, out, err = alienv_exec(cmd, herwig_pkg)
             myfile.write("Command '{}' exited with return code '{}'\n".format(cmd, rc))
-            myfile.write(out)
+            myfile.write(str(out))
             myfile.write("\n")
-            myfile.write(err)
+            myfile.write(str(err))
             myfile.write("\n")
-            if pdfname in out:
+            if pdfname in str(out):
                 print("PDF '{}' already installed.".format(pdfname))
             else:
                 if "LHAPDF_DATA_PATH" in os.environ:
@@ -266,29 +266,29 @@ def RunHerwig(nevents, pdfid, load_packages_separately):
                 cmd = "lhapdf --pdfdir=./ install {}".format(pdfname)
                 rc, out, err = alienv_exec(cmd, herwig_pkg)
                 myfile.write("Command '{}' exited with return code '{}'\n".format(cmd, rc))
-                myfile.write(out)
+                myfile.write(str(out))
                 myfile.write("\n")
-                myfile.write(err)
+                myfile.write(str(err))
                 myfile.write("\n")
                 out = subprocess.check_output(["ls"])
-                myfile.write(out)
+                myfile.write(str(out))
                 myfile.write("\n")
             cmd = "export LHAPDF_DATA_PATH=./:$LHAPDF_DATA_PATH;export LHAPDF_PDFSETS_ROOT=./;Herwig read --repo=$HERWIG_ROOT/share/Herwig/HerwigDefaults.rpo herwig.in"
             rc, out, err = alienv_exec(cmd, herwig_pkg)
             myfile.write("Command '{}' exited with return code '{}'\n".format(cmd, rc))
-            myfile.write(out)
+            myfile.write(str(out))
             myfile.write("\n")
-            myfile.write(err)
+            myfile.write(str(err))
             myfile.write("\n")
             out = subprocess.check_output(["ls"])
-            myfile.write(out)
+            myfile.write(str(out))
             myfile.write("\n")
             cmd = "export LHAPDF_DATA_PATH=./:$LHAPDF_DATA_PATH;export LHAPDF_PDFSETS_ROOT=./;Herwig run herwig.run -s {} -N {}\n".format(rnd, nevents)
             rc, out, err = alienv_exec(cmd, herwig_pkg)
             myfile.write("Command '{}' exited with return code '{}'\n".format(cmd, rc))
-            myfile.write(out)
+            myfile.write(str(out))
             myfile.write("\n")
-            myfile.write(err)
+            myfile.write(str(err))
             myfile.write("\n")
     else:
         if TestHerwig():

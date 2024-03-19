@@ -1,0 +1,17 @@
+name: POWHEG_PYTHIA8_BEAUTY_13TeV_FS05RS1
+numevents: 100000
+numbjobs: 800
+gen: powheg+pythia8+evtgen
+proc: beauty
+beam_type: pp
+lhans: 11000
+ebeam1: 6500
+ebeam2: 6500
+powheg_config:
+  qmass: -1
+  facscfact: 0.5
+  renscfact: 1
+grid_config:
+  ttl: 7200
+  max_files_per_job: 20
+  aliphysics: vAN-20181026-1

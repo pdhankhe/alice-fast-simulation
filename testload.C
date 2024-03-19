@@ -10,6 +10,8 @@
 
 void testload()
 {
+
+std::cout << "Loading libraries for alice" << std::endl;
   gInterpreter->AddIncludePath("$ALICE_ROOT/include");
   gInterpreter->AddIncludePath("$ALICE_PHYSICS/include");
   gInterpreter->AddIncludePath("$FASTJET/include");

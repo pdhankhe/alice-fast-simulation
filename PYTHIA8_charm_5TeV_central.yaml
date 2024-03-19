@@ -1,0 +1,13 @@
+name: PYTHIA8_CHARM_5TeV_central
+numevents: 1000
+numbjobs: 100
+gen: pythia8
+proc: charm
+beam_type: pp
+lhans: 11000
+ebeam1: 2500
+ebeam2: 2500
+grid_config:
+  ttl: 7200
+  max_files_per_job: 20
+  aliphysics: vAN-20181026-1

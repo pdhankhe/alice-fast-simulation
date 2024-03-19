@@ -314,7 +314,9 @@ def SubmitProcessingJobs(TrainName, LocalPath, AlienPath, AliPhysicsVersion, Off
                    "PythiaProcess_dev.h",
                    "AliAnalysisTaskHFJets.h", #"AliAnalysisTaskHFJets.cxx",
                    "THepMCParser_dev.h", #"THepMCParser_dev.cxx",
-                   "libAnalysisCode.so"]
+                   "ecorrel.cxx",
+		   "ecorrel.hh",
+		   "libAnalysisCode.so"]
 
     Packages = "\"VO_ALICE@Python-modules::1.0-117\",\n"
     #Packages = "\"VO_ALICE@Python-modules::1.0-51\",\n"

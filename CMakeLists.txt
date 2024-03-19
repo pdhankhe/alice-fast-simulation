@@ -38,7 +38,7 @@ set(SRCS
     ${IMP_SRC_DIR}/AliPythiaBase_dev.cxx
     ${IMP_SRC_DIR}/OnTheFlySimulationGenerator.cxx
     ${IMP_SRC_DIR}/THepMCParser_dev.cxx
-     ${IMP_SRC_DIR}//ecorrel.cxx
+     ${IMP_SRC_DIR}/ecorrel.cxx
 	)
 
 # Requried headers to build the library.

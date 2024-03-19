@@ -119,8 +119,8 @@ namespace EnergyCorrelators
             fec.push_back(new CorrelatorsContainer());
         }
         for (size_t i = 0; i < parts.size(); i++)
-        {
-            for (size_t j = 0; j < parts.size(); j++)
+        { 
+	  for (size_t j = 0; j < parts.size(); j++)
             {
                 double _phi12 = fabs(parts[i].delta_phi_to(parts[j])); // expecting delta_phi_to() to return values in [-pi, pi]
                 double _eta12 = parts[i].eta() - parts[j].eta();
@@ -195,8 +195,8 @@ namespace EnergyCorrelators
                     }
                 }
             }
-        }
-    }
+        } 
+   }
 
     CorrelatorsContainer* CorrelatorBuilder::correlator(int n)
     {
